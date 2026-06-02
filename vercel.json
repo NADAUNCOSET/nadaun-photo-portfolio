@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/images/:path*", "destination": "https://nadaun-portfolio.vercel.app/images/:path*" }
+    { "source": "/images/:path*", "destination": "https://media.nadaun.co/photo/:path*" }
   ],
   "headers": [
     {

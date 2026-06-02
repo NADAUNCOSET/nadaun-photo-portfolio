@@ -1,0 +1,7 @@
+# 이미지는 R2(media.nadaun.co)에서 서빙 → Vercel 배포에 포함 안 함 (769MB 업로드 방지)
+images/
+backups/
+compress_photos.py
+*.py
+.DS_Store
+Thumbs.db
