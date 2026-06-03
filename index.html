@@ -1528,13 +1528,20 @@ function buildFilters(){
   });
 }
 
+// 라벨 카테고리(인물/프로필류)는 진입/새로고침마다 무작위 순서로 노출.
+// Portrait·Corporate·Concert·Editorial·Lookbook 등 큐레이션 카테고리는 제외.
+const SHUFFLE_CATS = new Set(['Business Profile','Actor Profile','Family','Couple','Magazine','Group']);
+function _shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
 function getFilteredProjects(){
-  return PROJECTS.filter(p=>{
+  const list = PROJECTS.filter(p=>{
     if(activeMain==='all') return true;
     if(p.category!==activeMain) return false;
     if(activeSub==='all') return true;
     return p.sub===activeSub;
   });
+  if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) _shuffle(list);
+  return list;
 }
 
 buildFilters(); buildGrid();
