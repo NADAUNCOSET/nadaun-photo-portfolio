@@ -321,6 +321,7 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 0;
+      align-items: start;   /* 카드가 행 높이로 늘어나지 않게 — 비율 보존 */
     }
     .pcard {
       position: relative; border-radius: 3px;
@@ -331,6 +332,8 @@
       content-visibility: auto;
       contain-intrinsic-size: 0 380px;
     }
+    /* 2026-06-03: 인물 중심 카테고리는 4:5 세로 비율 */
+    .pcard.ratio45 { aspect-ratio: 4 / 5; contain-intrinsic-size: 0 480px; }
     /* span 클래스 무효화 — columns 레이아웃에선 불필요 */
     .pcard.c7,.pcard.c5,.pcard.c4,.pcard.c8,.pcard.c6 { }
 
@@ -1299,16 +1302,16 @@ const PROJECTS = [
   { id:1177, name:"SSY", category:"Couple", year:'2025', cover:'images/portfolio/20250921_서승용/00.webp', photos: imgs("20250921_서승용", 8) },
   { id:1178, name:"SYH", category:"Couple", year:'2025', cover:'images/portfolio/20251018_석유화/00.webp', photos: imgs("20251018_석유화", 2) },
   { id:1179, name:"KSH", category:"Business Profile", year:'2022', cover:'images/portfolio/20220308_공성하/00.webp', photos: imgs("20220308_공성하", 13) },
-  { id:1180, name:"LJ", category:"Business Profile", year:'2022', cover:'images/portfolio/20220712_이준/00.webp', photos: imgs("20220712_이준", 2) },
+  { id:1180, name:"LJ", category:"Actor Profile", year:'2022', cover:'images/portfolio/20220712_이준/00.webp', photos: imgs("20220712_이준", 2) },
   { id:1181, name:"AR", category:"Business Profile", year:'2022', cover:'images/portfolio/20221011_아람/00.webp', photos: imgs("20221011_아람", 5) },
   { id:1182, name:"JULIE", category:"Business Profile", year:'2022', cover:'images/portfolio/20221022_JULIE/00.webp', photos: imgs("20221022_JULIE", 4) },
   { id:1183, name:"JDA", category:"Business Profile", year:'2022', cover:'images/portfolio/20221226_정다안 프로필/00.webp', photos: imgs("20221226_정다안 프로필", 8) },
   { id:1184, name:"JEJ", category:"Business Profile", year:'2023', cover:'images/portfolio/20230428_정의지/00.webp', photos: imgs("20230428_정의지", 3) },
-  { id:1185, name:"SEG", category:"Business Profile", year:'2023', cover:'images/portfolio/20230817_서은규/00.webp', photos: imgs("20230817_서은규", 6) },
+  { id:1185, name:"SEG", category:"Actor Profile", year:'2023', cover:'images/portfolio/20230817_서은규/00.webp', photos: imgs("20230817_서은규", 6) },
   { id:1186, name:"KDH", category:"Business Profile", year:'2023', cover:'images/portfolio/20230825_김도형/00.webp', photos: imgs("20230825_김도형", 4) },
   { id:1187, name:"JYS", category:"Business Profile", year:'2023', cover:'images/portfolio/20230903_종윤수/00.webp', photos: imgs("20230903_종윤수", 10) },
   { id:1188, name:"JMY", category:"Business Profile", year:'2023', cover:'images/portfolio/20230905_정민영/00.webp', photos: imgs("20230905_정민영", 1) },
-  { id:1189, name:"KMJ", category:"Business Profile", year:'2023', cover:'images/portfolio/20230927_권민준/00.webp', photos: imgs("20230927_권민준", 4) },
+  { id:1189, name:"KMJ", category:"Actor Profile", year:'2023', cover:'images/portfolio/20230927_권민준/00.webp', photos: imgs("20230927_권민준", 4) },
   { id:1190, name:"PSW", category:"Business Profile", year:'2023', cover:'images/portfolio/20231005_박상욱/00.webp', photos: imgs("20231005_박상욱", 2) },
   { id:1191, name:"KCY", category:"Business Profile", year:'2023', cover:'images/portfolio/20231206_김찬영/00.webp', photos: imgs("20231206_김찬영", 2) },
   { id:1192, name:"KYH", category:"Business Profile", year:'2024', cover:'images/portfolio/20240106_구요한/00.webp', photos: imgs("20240106_구요한", 1) },
@@ -1340,7 +1343,7 @@ const PROJECTS = [
   { id:1218, name:"PRP", category:"Business Profile", year:'2025', cover:'images/portfolio/20250306_프로필/00.webp', photos: imgs("20250306_프로필", 25) },
   { id:1219, name:"HDY", category:"Business Profile", year:'2025', cover:'images/portfolio/20250324_한대열님/00.webp', photos: imgs("20250324_한대열님", 1) },
   { id:1220, name:"MOA", category:"Business Profile", year:'2025', cover:'images/portfolio/20250410_MOA/00.webp', photos: imgs("20250410_MOA", 1) },
-  { id:1221, name:"GW", category:"Business Profile", year:'2025', cover:'images/portfolio/20250516_경욱/00.webp', photos: imgs("20250516_경욱", 7) },
+  { id:1221, name:"GW", category:"Actor Profile", year:'2025', cover:'images/portfolio/20250516_경욱/00.webp', photos: imgs("20250516_경욱", 7) },
   { id:1222, name:"LGW", category:"Business Profile", year:'2025', cover:'images/portfolio/20250528_이경우/00.webp', photos: imgs("20250528_이경우", 1) },
   { id:1223, name:"DNE", category:"Business Profile", year:'2025', cover:'images/portfolio/20250605_데니얼/00.webp', photos: imgs("20250605_데니얼", 2) },
   { id:1224, name:"HKT", category:"Business Profile", year:'2025', cover:'images/portfolio/20250714_하키팀프로필/00.webp', photos: imgs("20250714_하키팀프로필", 14) },
@@ -1351,7 +1354,8 @@ const PROJECTS = [
   { id:1229, name:"SSGJ", category:"Business Profile", year:'2026', cover:'images/portfolio/20260107_세시간전/00.webp', photos: imgs("20260107_세시간전", 36) },
 ];
 
-const CATS_MAIN = ['all','Corporate','Concert & Festival','External Event','Editorial','Lookbook','Album','Magazine','Business Profile','Portrait','Family','Couple'];
+const CATS_MAIN = ['all','Corporate','Concert & Festival','External Event','Editorial','Lookbook','Album','Magazine','Business Profile','Actor Profile','Portrait','Family','Couple'];
+const RATIO45 = new Set(['Editorial','Lookbook','Album','Magazine','Business Profile','Actor Profile','Portrait']);  // 인물중심 4:5
 const COLS = ['c6','c6','c6','c6','c6','c6'];
 
 function addHover(el){ /* no-op */ }
@@ -1419,7 +1423,7 @@ function buildGrid(animate){
     filtered.forEach((proj,i)=>{
       const col = COLS[i % COLS.length];
       const card = document.createElement('div');
-      card.className = 'pcard ' + col;
+      card.className = 'pcard ' + col + (RATIO45.has(proj.category) ? ' ratio45' : '');
       card.dataset.id = proj.id;
 
       const img = document.createElement('img');
