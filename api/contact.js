@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, phone, shootType, date, photographers, message } = req.body;
+  const { name, phone, shootType, date, scale, message } = req.body;
 
   if (!name || !phone || !shootType || !date) {
     return res.status(400).json({ error: '필수 항목을 입력해주세요.' });
@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   // Google Calendar 링크 생성 — 날짜 범위("2026-04-19 ~ 2026-04-20") 대응
   const eventTitle = encodeURIComponent(`[NADAUN] ${shootType} — ${name}`);
-  const eventDetails = encodeURIComponent(`고객명: ${name}\n연락처: ${phone}\n촬영 종류: ${shootType}\n내용: ${message || '-'}`);
+  const eventDetails = encodeURIComponent(`고객명: ${name}\n연락처: ${phone}\n촬영 종류: ${shootType}\n규모/예산: ${scale || '-'}\n내용: ${message || '-'}`);
   const dateParts = date.includes('~') ? date.split('~').map(d => d.trim()) : [date, date];
   const startDate = new Date(dateParts[0]);
   const endDate = new Date(dateParts[dateParts.length - 1]);
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         <tr><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;">연락처</td><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; font-size: 15px; color: #1a1a1a; font-weight: 500;">${phone}</td></tr>
         <tr><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;">촬영 종류</td><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; font-size: 15px; color: #1a1a1a; font-weight: 500;">${shootType}</td></tr>
         <tr><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;">희망 날짜</td><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; font-size: 15px; color: #1a1a1a; font-weight: 500;">${date}</td></tr>
-        <tr><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;">포토그래퍼</td><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; font-size: 15px; color: #1a1a1a; font-weight: 500;">${photographers || '-'}</td></tr>
+        <tr><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;">규모/예산</td><td style="padding: 12px 0; border-bottom: 0.5px solid #e8e6e1; font-size: 15px; color: #1a1a1a; font-weight: 500;">${scale || '-'}</td></tr>
         <tr><td style="padding: 12px 0; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; vertical-align: top;">내용</td><td style="padding: 12px 0; font-size: 15px; color: #1a1a1a; line-height: 1.7;">${(message || '-').replace(/\n/g, '<br>')}</td></tr>
       </table>
       <div style="margin-top: 32px;">
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Authorization': `Bearer ${(process.env.RESEND_API_KEY || '').replace(/[^!-~]/g, '')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

@@ -1954,7 +1954,7 @@ document.addEventListener('DOMContentLoaded', function() {
       name: document.getElementById('cf-name').value,
       phone: document.getElementById('cf-phone').value,
       shootType: document.getElementById('cf-shoot').value,
-      photographers: document.getElementById('cf-photographers').value || '-',
+      scale: document.getElementById('cf-scale').value || '-',
       date: dateTo ? `${dateFrom} ~ ${dateTo}` : dateFrom,
       message: document.getElementById('cf-message').value,
     };
@@ -2025,17 +2025,16 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
         <div class="cfield">
-          <label for="cf-shoot">Shoot Type *</label>
+          <label for="cf-shoot">Shoot Type 촬영 종류 *</label>
           <select id="cf-shoot" required>
-            <option value="" disabled selected>Select a type</option>
-            <option>Corporate / Event</option>
-            <option>Concert / Performance</option>
-            <option>Festival</option>
-            <option>Product / Commercial</option>
-            <option>Profile / Portrait</option>
-            <option>Wedding / Family</option>
-            <option>Magazine / Editorial</option>
-            <option>Other</option>
+            <option value="" disabled selected>촬영 종류 선택 (Select type)</option>
+            <option>Editorial / 에디토리얼</option>
+            <option>Magazine / 매거진</option>
+            <option>Corporate / 기업</option>
+            <option>External Event / 외부 행사</option>
+            <option>Concert &amp; Festival / 콘서트·페스티벌</option>
+            <option>Wedding / 웨딩</option>
+            <option>Other / 기타</option>
           </select>
           <span class="cfield-line"></span>
         </div>
@@ -2052,15 +2051,8 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
         <div class="cfield">
-          <label for="cf-photographers">Photographers Needed</label>
-          <select id="cf-photographers">
-            <option value="" disabled selected>Select crew size</option>
-            <option value="MAIN only">MAIN only</option>
-            <option value="MAIN + 1st">MAIN + 1st</option>
-            <option value="MAIN + 1st + 2nd">MAIN + 1st + 2nd</option>
-            <option value="MAIN + 1st + 2nd + 3rd">MAIN + 1st + 2nd + 3rd</option>
-            <option value="Discuss">To be discussed</option>
-          </select>
+          <label for="cf-scale">규모 / 예산 (Scale / Budget)</label>
+          <input type="text" id="cf-scale" placeholder="예산 · 인원 · 규모 등 자유롭게">
           <span class="cfield-line"></span>
         </div>
         <div class="cfield">
