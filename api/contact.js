@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   // Google Calendar 링크 생성 — 날짜 범위("2026-04-19 ~ 2026-04-20") 대응
-  const eventTitle = encodeURIComponent(`[NADAUN] ${shootType} — ${name}`);
+  const eventTitle = encodeURIComponent(`[NADAUN PHOTO] ${shootType} — ${name}`);
   const eventDetails = encodeURIComponent(`고객명: ${name}\n연락처: ${phone}\n촬영 종류: ${shootType}\n규모/예산: ${scale || '-'}\n내용: ${message || '-'}`);
   const dateParts = date.includes('~') ? date.split('~').map(d => d.trim()) : [date, date];
   const startDate = new Date(dateParts[0]);
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 <body style="font-family: 'Pretendard', Arial, sans-serif; background: #f5f4f0; padding: 40px 0;">
   <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden;">
     <div style="background: #1a1a1a; padding: 32px 40px;">
-      <div style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.02em;">NADAUN</div>
+      <div style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.02em;">NADAUN <span style="color:#FA5D29;">PHOTO</span></div>
       <div style="font-size: 13px; color: #999; margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase;">New Inquiry</div>
     </div>
     <div style="padding: 40px;">
@@ -60,9 +60,9 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'NADAUN Landing Page <onboarding@resend.dev>',
+        from: 'NADAUN PHOTO <onboarding@resend.dev>',
         to: ['rbsent.info@gmail.com'],
-        subject: `[문의] ${shootType} — ${name} (${date})`,
+        subject: `[사진 문의] ${shootType} — ${name} (${date})`,
         html: emailHtml,
       }),
     });
