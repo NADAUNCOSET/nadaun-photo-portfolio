@@ -2,37 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://nadaun-portfolio.vercel.app/nadaun-portfolio.html</loc>
-    <lastmod>2026-04-14</lastmod>
+    <loc>https://photo.nadaun.co/</loc>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/pepsi-festa/00.jpg</image:loc>
+      <image:loc>https://media.nadaun.co/photo/portfolio/Concert%20%26%20Festival/pepsi-festa/00.webp</image:loc>
       <image:title>NADAUN 나다운 PEPSI FESTA 콘서트 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/meritz-dream/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 Meritz Dream Ceremony 기업행사 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/hanmaeum-fest/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 Hanmaeum Fest 페스티벌 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/royal-salute/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 Royal Salute 기업 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/varilux-seoul/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 EssilorLuxottica 기업행사 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/sylfirm/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 SYLFIRM X 기업 촬영</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://nadaun-portfolio.vercel.app/images/portfolio/banyan-tree/00.jpg</image:loc>
-      <image:title>NADAUN 나다운 Banyan Tree 기업행사 촬영</image:title>
     </image:image>
   </url>
 </urlset>

@@ -1,0 +1,35 @@
+# NADAUN PHOTO — robots.txt (2026-07-06)
+User-agent: *
+Allow: /
+
+# 네이버 / 다음 (검색 노출)
+User-agent: Yeti
+Allow: /
+User-agent: NaverBot
+Allow: /
+User-agent: Daumoa
+Allow: /
+
+# 구글
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+
+# AI 검색·인용 봇 (브랜드 발견성)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://photo.nadaun.co/sitemap.xml
