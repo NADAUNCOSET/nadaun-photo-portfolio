@@ -1448,6 +1448,7 @@ const PROJECTS = [
   { id:1075, name:"HTE", category:"Portrait", year:'2023', cover:'images/portfolio/Portrait/20230206_황태은/00.webp', photos: imgs("Portrait/20230206_황태은", 12) },
   { id:1352, name:"LSH", category:"Portrait", year:'2023', cover:'images/portfolio/Portrait/20230207_이수현/00.webp', photos: ["images/portfolio/Portrait/20230207_이수현/00.webp","images/portfolio/Portrait/20230207_이수현/01.webp","images/portfolio/Portrait/20230207_이수현/02.webp","images/portfolio/Portrait/20230207_이수현/03.webp","images/portfolio/Portrait/20230207_이수현/04.webp","images/portfolio/Portrait/20230207_이수현/10.webp","images/portfolio/Portrait/20230207_이수현/11.webp","images/portfolio/Portrait/20230207_이수현/12.webp","images/portfolio/Portrait/20230207_이수현/13.webp","images/portfolio/Portrait/20230207_이수현/14.webp","images/portfolio/Portrait/20230207_이수현/15.webp"] },
   { id:1077, name:"KNY", category:"Portrait", year:'2023', cover:'images/portfolio/Portrait/20230215_김나연/00.webp', photos: imgs("Portrait/20230215_김나연", 12) },
+  { id:1459, name:"iceball", category:"Corporate", year:'', cover:'images/portfolio/Corporate/iceball/00.webp', photos: imgs("Corporate/iceball", 131) },
 ];
 
 const CATS_MAIN = ['all','Corporate','Concert & Festival','External Event','Lookbook','Editorial','Collaboration','Magazine','Poster','Portrait','COMPANY PROFILE','Business Profile','Actor Profile','Family','Couple'];
@@ -1613,8 +1614,15 @@ function buildFilters(){
 
 // 라벨 카테고리(인물/프로필류)는 진입/새로고침마다 무작위 순서로 노출.
 // Portrait·Corporate·Concert·Editorial·Lookbook 등 큐레이션 카테고리는 제외.
-const SHUFFLE_CATS = new Set(['Business Profile','Actor Profile','Family','Couple','Magazine','Group']);
+// Profile galleries must stay in source order (newest entries are listed first).
+// Do not randomize Business/Actor Profile: newly uploaded work should be visible first.
+const SHUFFLE_CATS = new Set(['Family','Couple','Magazine','Group']);
+const NEWEST_FIRST_CATS = new Set(['Business Profile','Actor Profile']);
 function _shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function _projectDate(p){
+  const match = String(p.cover || '').match(/\/(20\d{6})/);
+  return match ? Number(match[1]) : Number(p.year || 0) * 10000;
+}
 
 function getFilteredProjects(){
   const list = PROJECTS.filter(p=>{
@@ -1624,6 +1632,9 @@ function getFilteredProjects(){
     return p.sub===activeSub;
   });
   if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) _shuffle(list);
+  if(NEWEST_FIRST_CATS.has(activeMain)) {
+    list.sort((a,b)=>_projectDate(b)-_projectDate(a) || Number(b.id)-Number(a.id));
+  }
   return list;
 }
 
