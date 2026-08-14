@@ -1621,6 +1621,7 @@ function buildFilters(){
 const SHUFFLE_CATS = new Set(['Family','Couple','Magazine','Group']);
 const NEWEST_FIRST_CATS = new Set(['Business Profile','Actor Profile']);
 const ACTOR_PROFILE_PINNED_IDS = [1185,1182,1068,1084,1177,1176];
+const BUSINESS_PROFILE_PINNED_IDS = [1223,1331,1220,1188,1163];
 function _shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function _projectDate(p){
   const match = String(p.cover || '').match(/\/(20\d{6})/);
@@ -1637,9 +1638,12 @@ function getFilteredProjects(){
   if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) _shuffle(list);
   if(NEWEST_FIRST_CATS.has(activeMain)) {
     list.sort((a,b)=>{
-      if(activeMain==='Actor Profile') {
-        const aPinned = ACTOR_PROFILE_PINNED_IDS.indexOf(Number(a.id));
-        const bPinned = ACTOR_PROFILE_PINNED_IDS.indexOf(Number(b.id));
+      const pinnedIds = activeMain==='Actor Profile'
+        ? ACTOR_PROFILE_PINNED_IDS
+        : activeMain==='Business Profile' ? BUSINESS_PROFILE_PINNED_IDS : [];
+      if(pinnedIds.length) {
+        const aPinned = pinnedIds.indexOf(Number(a.id));
+        const bPinned = pinnedIds.indexOf(Number(b.id));
         if(aPinned !== -1 || bPinned !== -1) {
           if(aPinned === -1) return 1;
           if(bPinned === -1) return -1;
