@@ -1322,11 +1322,20 @@ function buildGrid(animate){
 }
 
 /* Each existing shooting category is directly selectable; no inferred groups or submenus. */
+// User-curated menu order; any new source categories remain available at the end.
+const PHOTO_CATEGORY_ORDER = [
+  'Editorial', 'Corporate', 'Collaboration', 'Concert & Festival', 'External Event',
+  'Lookbook', 'Portrait', 'Family', 'Couple', 'Actor Profile', 'Business Profile',
+  'COMPANY PROFILE', 'Poster', 'Magazine',
+];
 let activeMain = 'all';
 const filterWrap = document.getElementById('filterWrap');
 function buildFilters(){
   filterWrap.replaceChildren();
-  ['all', ...new Set(PROJECTS.map(p=>p.category))].forEach(category=>{
+  const available = [...new Set(PROJECTS.map(p=>p.category))];
+  const ordered = [...PHOTO_CATEGORY_ORDER.filter(category=>available.includes(category)),
+    ...available.filter(category=>!PHOTO_CATEGORY_ORDER.includes(category))];
+  ['all', ...ordered].forEach(category=>{
     const btn=document.createElement('button'); btn.type='button';
     btn.className='filter-btn'+(category===activeMain?' active':'');
     btn.textContent=category==='all'?'ALL':category;
