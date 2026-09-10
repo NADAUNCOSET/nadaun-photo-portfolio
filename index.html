@@ -821,9 +821,9 @@
     }
 
     /* Four readable labels, with native scrolling and transparent-area tap routing. */
-    #filterWrap { --category-size:clamp(52px,10.2vh,120px); pointer-events:none; height:min(calc((var(--category-size) * 1.02 + 14px) * 4 + var(--category-edge) * 2),calc(100dvh - var(--nav-height) - 48px)); }
-    #filterWrap .filter-btn { pointer-events:auto; font-size:var(--category-size); line-height:1.02; }
-    @media(max-width:900px) { #filterWrap { --category-size:clamp(34px,10vw,64px); height:min(calc((var(--category-size) * 1.02 + 14px) * 4 + var(--category-edge) * 2),calc(100dvh - var(--nav-height) - 48px)); } }
+    #filterWrap { --category-size:clamp(52px,10.2vh,120px); --category-row:max(44px,calc(var(--category-size) * .86)); pointer-events:none; height:min(calc(var(--category-row) * 4 + var(--category-edge) * 2),calc(100dvh - var(--nav-height) - 48px)); }
+    #filterWrap .filter-btn { pointer-events:auto; font-size:var(--category-size); line-height:.86; min-height:44px; padding:0 8px 0 10px; margin:0; }
+    @media(max-width:900px) { #filterWrap { --category-size:clamp(34px,10vw,64px); height:min(calc(var(--category-row) * 4 + var(--category-edge) * 2),calc(100dvh - var(--nav-height) - 48px)); } }
 
     /* Emphasis belongs to the background; category text stays neutral. */
     #filterWrap .filter-btn,#filterWrap.visible .filter-btn,#filterWrap .filter-btn.active,#filterWrap.visible .filter-btn.active,#filterWrap .filter-btn:hover,#filterWrap .filter-btn:focus-visible { color:#F5F4F0; }
