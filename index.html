@@ -782,13 +782,33 @@
       .filter-btn { font-size:11px; }
     }
   
-    /* Approved serif categories; the right-hand layout also applies on mobile. */
-    #filterWrap .filter-btn { font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; letter-spacing:0; text-shadow:0 1px 6px rgba(0,0,0,.55); }
+    /* Condensed gothic categories; preserve the right-hand layout on mobile. */
+    #filterWrap .filter-btn { font-family:var(--category-font); font-weight:600; letter-spacing:-.025em; text-shadow:0 1px 2px #1a1a1a,0 0 8px #1a1a1a; }
     @media(max-width:900px) {
       #filterWrap { position:fixed; left:auto; right:12px; top:calc(50% + var(--nav-height)/2); transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; width:max-content; max-width:78vw; max-height:calc(100dvh - var(--nav-height) - 24px); margin:0; gap:0; overflow-y:auto; overflow-x:hidden; background:none; z-index:55; pointer-events:none; }
       #filterWrap .filter-btn { display:block; flex-shrink:0; min-height:44px; padding:0; font-size:clamp(17px,5vw,24px); line-height:1.1; text-align:right; color:var(--off-white); pointer-events:auto; box-shadow:none; }
       #filterWrap .filter-btn.active,#filterWrap .filter-btn:hover { color:var(--gold); }
     }
+
+    :root { --category-font:'Barlow Condensed','Inter Tight',sans-serif; --category-ink:#1a1a1a; --category-accent:#FBB200; }
+    #filterWrap .filter-btn { position:relative; isolation:isolate; padding-left:10px; padding-right:8px; border-radius:0; overflow:visible; background-image:linear-gradient(270deg,rgba(26,26,26,.92),rgba(26,26,26,.68) 75%,transparent); background-position:right center; background-repeat:no-repeat; background-size:0% 100%; transition:transform .4s cubic-bezier(.16,1,.3,1),background-size .4s cubic-bezier(.16,1,.3,1),color .25s; }
+    #filterWrap .filter-btn::before { content:attr(data-label); position:absolute; inset:0; display:flex; align-items:center; justify-content:flex-end; padding:inherit; color:var(--category-accent); text-shadow:0 1px 2px var(--category-ink); clip-path:inset(0 100% 0 0); transition:clip-path .45s cubic-bezier(.16,1,.3,1); pointer-events:none; }
+    #filterWrap .filter-btn::after { content:''; position:absolute; right:8px; bottom:2px; width:22px; height:2px; background:var(--category-accent); transform:scaleX(0); transform-origin:right; transition:transform .4s cubic-bezier(.16,1,.3,1); pointer-events:none; }
+    #filterWrap .filter-btn.active { color:var(--category-accent); background-size:100% 100%; }
+    #filterWrap .filter-btn.active::before,#filterWrap .filter-btn:focus-visible::before { clip-path:inset(0); }
+    #filterWrap .filter-btn.active::after,#filterWrap .filter-btn:focus-visible::after { transform:scaleX(1); }
+    #filterWrap .filter-btn:focus-visible { outline:1px solid var(--category-accent); outline-offset:3px; background-size:100% 100%; }
+    @media(hover:hover) and (pointer:fine) {
+      #filterWrap .filter-btn:hover { transform:translateX(-6px); background-size:100% 100%; }
+      #filterWrap .filter-btn:hover::before { clip-path:inset(0); }
+      #filterWrap .filter-btn:hover::after { transform:scaleX(1); }
+    }
+    @media(prefers-reduced-motion:reduce) { #filterWrap .filter-btn,#filterWrap .filter-btn::before,#filterWrap .filter-btn::after { transition:none; } #filterWrap .filter-btn:hover { transform:none; } }
+
+    #filterWrap .filter-btn { transition:opacity .35s ease,transform .45s cubic-bezier(.16,1,.3,1),background-size .45s cubic-bezier(.16,1,.3,1),color .3s; }
+    #filterWrap.is-scrolling .filter-btn:not(.active):not(:hover):not(:focus-visible) { opacity:.48; }
+    @media(hover:hover) and (pointer:fine) { #filterWrap:has(.filter-btn:hover) .filter-btn:not(:hover):not(.active) { opacity:.42; } }
+    @media(prefers-reduced-motion:reduce) { #filterWrap .filter-btn,#filterWrap .filter-btn::before,#filterWrap .filter-btn::after { transition:none; } }
 </style>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -796,6 +816,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/contact.css?v=20260910">
 <script src="/contact.js?v=20260910" defer></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&display=swap">
 </head>
 <body>
 
@@ -1282,6 +1303,28 @@ const mTrack = document.createElement('div'); mTrack.className='client-index'; m
 /* ── BUILD PROJECT GRID ── */
 const pGrid = document.getElementById('pGrid');
 
+
+// Keep category swaps sequential; repeated clicks supersede the previous transition.
+let galleryMotionRequest=0, galleryMotionAnimation=null;
+function cancelGalleryMotion(){ galleryMotionRequest++; galleryMotionAnimation?.cancel(); galleryMotionAnimation=null; }
+async function dissolveGallery(element, update){
+  cancelGalleryMotion();
+  const request=galleryMotionRequest;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches || !element.animate){ update(); return; }
+  const outgoing=element.animate([{opacity:1},{opacity:0}],{duration:180,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
+  galleryMotionAnimation=outgoing;
+  try { await outgoing.finished; } catch { return; }
+  if(request!==galleryMotionRequest)return;
+  try {
+    update();
+    outgoing.cancel();
+    const incoming=element.animate([{opacity:0},{opacity:1}],{duration:360,easing:'cubic-bezier(.16,1,.3,1)'});
+    galleryMotionAnimation=incoming;
+    await incoming.finished;
+  } catch { outgoing.cancel(); }
+  finally { if(request===galleryMotionRequest)galleryMotionAnimation=null; }
+}
+
 function buildGrid(animate){
   const filtered = getFilteredProjects();
   const projCount = document.getElementById('projCount');
@@ -1319,7 +1362,7 @@ function buildGrid(animate){
       pGrid.appendChild(card);
       card.addEventListener('click', () => openLightbox(proj.id, 0));
     });
-    if (!matchMedia('(prefers-reduced-motion:reduce)').matches) gsap.from(pGrid.children, {
+    if (animate && !matchMedia('(prefers-reduced-motion:reduce)').matches) gsap.from(pGrid.children, {
       opacity: 0, y: 20, duration: .45, ease: 'power3.out',
       stagger: { amount: 0.45, from: 'start' }
     });
@@ -1347,11 +1390,12 @@ function buildFilters(){
     const btn=document.createElement('button'); btn.type='button';
     btn.className='filter-btn'+(category===activeMain?' active':'');
     btn.textContent=category==='all'?'ALL':category;
+    btn.dataset.label=btn.textContent; btn.setAttribute('aria-label',btn.textContent);
     btn.setAttribute('aria-pressed',String(category===activeMain));
     btn.addEventListener('click',()=>{
       activeMain=category;
-      buildFilters(); buildGrid(true);
-      window.scrollTo({top:0,behavior:'instant'});
+      buildFilters();
+      dissolveGallery(pGrid,()=>{buildGrid(false);window.scrollTo({top:0,behavior:'instant'});});
     });
     filterWrap.appendChild(btn);
   });
@@ -1873,5 +1917,16 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="pv-wm pv-wm-center"><img src="images/nadaun_logo.png" alt=""></div>
 <div class="pv-wm pv-wm-roam" id="pvWmRoam" style="top:30vh;left:20vw;"><img src="images/nadaun_logo.png" alt=""></div>
 
+<script>
+(()=>{
+  const menu=document.getElementById('filterWrap'); if(!menu)return;
+  let settle;
+  window.addEventListener('scroll',()=>{
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    menu.classList.add('is-scrolling'); clearTimeout(settle);
+    settle=setTimeout(()=>menu.classList.remove('is-scrolling'),180);
+  },{passive:true});
+})();
+</script>
 </body>
 </html>
