@@ -163,12 +163,12 @@
     .loader-sub {
       position: absolute; bottom: clamp(32px, 5vh, 60px); left: clamp(32px, 4vw, 60px);
       font-family: var(--font-serif); font-size: clamp(11px, 1vw, 13px);
-      font-style: italic; color: rgba(255,255,255,0.25); letter-spacing: 0.05em; z-index: 3;
+      font-style: italic; color: rgba(255,255,255,0.25); letter-spacing: 0; z-index: 3;
     }
     .loader-count {
       position: absolute; bottom: clamp(32px, 5vh, 60px); right: clamp(32px, 4vw, 60px);
       font-family: var(--font-display); font-size: clamp(11px, 1.2vw, 14px);
-      font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; z-index: 3;
+      font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; z-index: 3;
     }
     .loader-progress {
       position: absolute; bottom: 0; left: 0;
@@ -202,13 +202,13 @@
     nav { display: flex; align-items: center; gap: 36px; }
     nav a {
       font-family: var(--font-display); font-size: 13px; font-weight: 500; /* 12×1.5≈18 → 13 */
-      letter-spacing: .1em; text-transform: uppercase; color: var(--mid-gray);
+      letter-spacing: 0; text-transform: uppercase; color: var(--mid-gray);
       text-decoration: none; transition: color .2s;
     }
     nav a:hover { color: var(--off-white); }
     .nav-contact {
       font-family: var(--font-display); font-size: 13px; font-weight: 600;
-      letter-spacing: .06em; text-transform: uppercase;
+      letter-spacing: 0; text-transform: uppercase;
       color: var(--black); background: var(--gold);
       padding: 11px 28px; border-radius: 2px; text-decoration: none;
       transition: background .2s;
@@ -263,7 +263,7 @@
     .marquee-item {
       display: inline-flex; align-items: center; gap: 32px; padding: 0 32px;
       font-family: var(--font-display); font-size: 22px; font-weight: 500;
-      letter-spacing: .04em; color: var(--mid-gray);
+      letter-spacing: 0; color: var(--mid-gray);
     }
     .marquee-dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
 
@@ -285,7 +285,7 @@
     }
     .grid-count {
       font-family: var(--font-display); font-size: 12px; font-weight: 300;
-      letter-spacing: .08em; color: var(--mid-gray);
+      letter-spacing: 0; color: var(--mid-gray);
     }
 
     /* Filter */
@@ -296,7 +296,7 @@
     .filter-group { display: flex; flex-direction: column; gap: 6px; }
     .filter-btn {
       font-family: var(--font-display); font-size: 12px; font-weight: 500;
-      letter-spacing: .08em; text-transform: uppercase;
+      letter-spacing: 0; text-transform: uppercase;
       color: var(--mid-gray); background: transparent;
       border: .5px solid var(--dim-gray); border-radius: 100px;
       padding: 8px 20px; cursor: pointer; transition: all .2s;
@@ -310,7 +310,7 @@
     }
     .filter-sub-btn {
       font-family: var(--font-display); font-size: 10px; font-weight: 400;
-      letter-spacing: .06em; color: var(--mid-gray); background: transparent;
+      letter-spacing: 0; color: var(--mid-gray); background: transparent;
       border: .5px solid rgba(255,255,255,.1); border-radius: 100px;
       padding: 4px 12px; cursor: pointer; transition: all .2s; white-space: nowrap;
     }
@@ -339,7 +339,7 @@
     /* 편집용 카드 고유번호 (확정 후 제거) */
     .pcard-id { position:absolute; top:6px; right:8px; z-index:4;
       font-family: var(--font-display); font-size:11px; font-weight:600; color:#fff;
-      background:rgba(0,0,0,.6); padding:2px 6px; border-radius:4px; letter-spacing:.02em; }
+      background:rgba(0,0,0,.6); padding:2px 6px; border-radius:4px; letter-spacing:0; }
     /* span 클래스 무효화 — columns 레이아웃에선 불필요 */
     .pcard.c7,.pcard.c5,.pcard.c4,.pcard.c8,.pcard.c6 { }
 
@@ -364,19 +364,19 @@
     .pcard:hover .pcard-info { opacity: 1; transform: translateY(0); }
     .pcard-cat {
       font-family: var(--font-display); font-size: 10px; font-weight: 600;
-      letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+      letter-spacing: 0; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
     }
     .pcard-name {
       font-family: var(--font-display); font-size: clamp(18px, 1.8vw, 28px);
       font-weight: 600; font-style: normal; letter-spacing: -.01em; line-height: 1.1; margin-bottom: 4px;
     }
     .pcard-meta {
-      font-size: 12px; color: rgba(240,238,233,.5); letter-spacing: .02em;
+      font-size: 12px; color: rgba(240,238,233,.5); letter-spacing: 0;
     }
     .pcard-badge {
       position: absolute; top: 16px; left: 16px;
       font-family: var(--font-display); font-size: 10px; font-weight: 500;
-      letter-spacing: .08em; color: rgba(240,238,233,.7);
+      letter-spacing: 0; color: rgba(240,238,233,.7);
       background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
       padding: 5px 12px; border-radius: 100px;
     }
@@ -443,7 +443,7 @@
     #gallery.open .gallery-proj-name { transform: translateY(0); }
     .gallery-proj-sub {
       font-family: var(--font-display); font-size: 11px; font-weight: 300;
-      letter-spacing: .08em; color: var(--mid-gray); margin-top: 2px;
+      letter-spacing: 0; color: var(--mid-gray); margin-top: 2px;
     }
     .gallery-close {
       width: 42px; height: 42px; border-radius: 50%;
@@ -492,7 +492,7 @@
     .gphoto-num {
       position: absolute; top: 8px; left: 8px;
       font-family: var(--font-display); font-size: 13px; font-weight: 600;
-      letter-spacing: .04em; color: #fff;
+      letter-spacing: 0; color: #fff;
       background: rgba(20,20,20,.72); padding: 3px 9px; border-radius: 999px;
       line-height: 1.2; backdrop-filter: blur(3px); pointer-events: none;
       opacity: 1; transition: opacity .2s; z-index: 3;
@@ -543,7 +543,7 @@
 
     .pv-meta {
       font-family: var(--font-display); font-size: 12px; font-weight: 300;
-      letter-spacing: .08em; text-transform: uppercase;
+      letter-spacing: 0; text-transform: uppercase;
       color: rgba(255,255,255,.4);
     }
     .pv-close {
@@ -651,13 +651,13 @@
     }
     .pv-nav-tag {
       font-family: var(--font-display); font-size: max(8px, 0.55vw);
-      font-weight: 500; letter-spacing: .1em;
+      font-weight: 500; letter-spacing: 0;
       text-transform: uppercase; color: var(--gold);
       opacity: .9; white-space: nowrap;
     }
     .pv-nav-name {
       font-family: var(--font-display); font-size: max(11px, 0.8vw);
-      font-weight: 600; letter-spacing: .02em;
+      font-weight: 600; letter-spacing: 0;
       color: #fff;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
@@ -726,248 +726,60 @@
     .footer-links { display: flex; gap: 28px; }
     .footer-links a {
       font-family: var(--font-display); font-size: 12px; font-weight: 400;
-      letter-spacing: .08em; text-transform: uppercase;
+      letter-spacing: 0; text-transform: uppercase;
       color: var(--mid-gray); text-decoration: none; transition: color .2s;
     }
     .footer-links a:hover { color: var(--gold); }
     .footer-copy {
-      font-size: 12px; color: var(--dim-gray); letter-spacing: .04em;
+      font-size: 12px; color: var(--dim-gray); letter-spacing: 0;
     }
     @media (max-width: 768px) {
       footer { padding: 48px 20px 28px; }
     }
 
-    /* ── CONTACT MODAL ── */
-    .cmodal-overlay {
-      position: fixed; inset: 0; z-index: 999;
-      display: flex; align-items: stretch;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.5s var(--ease-smooth);
-    }
-    .cmodal-overlay.open { opacity: 1; pointer-events: all; }
 
-    /* 왼쪽 — 다크 브랜드 패널 */
-    .cmodal-left {
-      width: 38%;
-      background: var(--black);
-      padding: 60px 48px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
-      transform: translateX(-100%);
-      transition: transform 0.6s var(--ease-out-expo);
-    }
-    .cmodal-overlay.open .cmodal-left { transform: translateX(0); }
-    .cmodal-left-brand {
-      font-family: var(--font-display);
-      font-size: 12px; font-weight: 600;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-    }
-    .cmodal-left-title {
-      font-family: var(--font-display);
-      font-size: clamp(34px, 3.2vw, 56px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      color: #fff;
-      margin: 0;
-    }
-    .cmodal-left-title em {
-      font-style: italic;
-      font-family: var(--font-serif);
-      font-weight: 300;
-      color: var(--gold);
-      font-size: 1.08em;
-      display: block;
-    }
-    .cmodal-left-sub {
-      font-size: 14px; color: rgba(255,255,255,0.6);
-      line-height: 1.75; letter-spacing: 0.01em;
-      margin-top: 24px;
-    }
-    .cmodal-left-deco {
-      position: absolute;
-      width: 320px; height: 320px;
-      border: 0.5px solid rgba(251,178,0,0.15);
-      border-radius: 50%;
-      bottom: -80px; right: -80px;
-      pointer-events: none;
-    }
-    .cmodal-left-deco2 {
-      position: absolute;
-      width: 200px; height: 200px;
-      border: 0.5px solid rgba(251,178,0,0.08);
-      border-radius: 50%;
-      bottom: -20px; right: -20px;
-      pointer-events: none;
-    }
+    /* NADAUN compact photo navigation — same shell as VIDEO. */
+    :root { --black:#1a1a1a; --black-mid:#222; --off-white:#f5f4f0; --nav-height:72px; --nav-line:rgba(245,244,240,.1); --nav-muted:#92918e; }
+    #hdr, #hdr.scrolled { height:var(--nav-height); padding:0 28px; gap:24px; background:var(--black); border-bottom:1px solid var(--nav-line); backdrop-filter:none; }
+    #hdr .logo { flex:1; min-width:0; min-height:44px; } #hdr .logo img { width:112px; height:auto; }
+    #hdr nav { display:flex; align-items:center; gap:28px; } #hdr nav a { display:inline-flex; align-items:center; min-height:44px; font-size:12px; font-family:var(--font-body); letter-spacing:0; }
+    #hdr .nav-contact { color:var(--off-white); background:none; border:0; border-radius:0; padding:0; text-transform:none; }
+    #hdr .nav-contact:hover { color:var(--gold); }
+    .projects-wrap { padding:calc(var(--nav-height) + 20px) 28px 88px; }
+    .grid-header { margin-bottom:8px; } .grid-count { font-size:11px; letter-spacing:0; color:var(--nav-muted); }
+    .filters { gap:0 24px; margin-bottom:20px; justify-content:center; }
+    .filter-group { gap:0; } .filter-btn,.filter-sub-btn { min-height:44px; padding:0; border:0; border-radius:0; letter-spacing:0; background:none; color:var(--nav-muted); font-family:var(--font-body); }
+    .filter-btn { font-size:11px; } .filter-sub { gap:16px; padding:0; } .filter-sub-btn { font-size:11px; }
+    .filter-btn.active,.filter-btn:hover { background:none; color:var(--off-white); } .filter-btn.active { box-shadow:inset 0 -1px var(--gold); }
+    .filter-sub-btn.active { color:var(--gold); }
+    .projects-grid { gap:4px; } .pcard { border-radius:0; }
+    #gallery:not(.open),#photoview:not(.open) { visibility:hidden; }
+    .gallery-close,.pv-close { width:44px; height:44px; padding:0; border:0; border-radius:0; background:none; }
+    .gallery-close:hover,.pv-close:hover { color:var(--gold); background:none; transform:none; }
+    .gallery-close svg,.pv-close svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.5; }
+    .pv-header { height:64px; } .pv-meta { color:rgba(245,244,240,.7); font-size:12px; }
+    .gallery-proj-sub,.pv-meta,.pv-nav-tag,.footer-links a,.footer-copy,.pcard-cat,.pcard-meta,.pcard-badge { letter-spacing:0; }
+    button:focus-visible,a:focus-visible,.pcard:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+    @media(max-width:768px) { :root { --nav-height:64px; } #hdr { padding:0 16px; gap:16px; } #hdr .logo img { width:80px; } #hdr nav { gap:20px; } #hdr nav a { font-size:11px; } .projects-wrap { padding:calc(var(--nav-height) + 12px) 12px 60px; } .filters { justify-content:flex-start; gap:0 18px; margin-bottom:16px; } .grid-header { padding:0 4px; } }
+    @media(prefers-reduced-motion:reduce) { .pcard,.gphoto { transition:none; } }
 
-    /* 오른쪽 — 폼 패널 */
-    .cmodal-right {
-      flex: 1;
-      background: var(--off-white);
-      overflow-y: auto;
-      transform: translateX(100%);
-      transition: transform 0.6s var(--ease-out-expo);
-      position: relative;
-    }
-    .cmodal-overlay.open .cmodal-right { transform: translateX(0); }
-    .cmodal-right-inner { padding: 52px 52px 52px; max-width: 520px; }
-    .cmodal-close {
-      position: absolute; top: 28px; right: 28px;
-      background: none; border: none;
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      color: var(--mid-gray);
-      transition: color 0.2s, transform 0.2s;
-      font-size: 18px; z-index: 1;
-    }
-    .cmodal-close:hover { color: var(--black); transform: rotate(90deg); }
-
-    .cform-eyebrow {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.12em;
-      color: var(--gold); margin-bottom: 12px;
-    }
-    .cform-title {
-      font-family: var(--font-display);
-      font-size: clamp(22px, 2.2vw, 30px);
-      font-weight: 700; letter-spacing: -0.02em;
-      color: var(--black); margin: 0 0 32px;
-      line-height: 1.2;
-    }
-
-    /* 인풋 — 언더라인 스타일 */
-    .cfield { margin-bottom: 28px; position: relative; }
-    .cfield label {
-      display: block;
-      font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--mid-gray); margin-bottom: 10px;
-    }
-    .cfield input, .cfield select, .cfield textarea {
-      width: 100%; box-sizing: border-box;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--warm-gray);
-      padding: 8px 0 14px;
-      font-family: var(--font-body);
-      font-size: 17px; color: var(--black);
-      outline: none;
-      transition: border-color 0.25s;
-      -webkit-appearance: none;
-      border-radius: 0;
-    }
-    .cfield input::placeholder, .cfield textarea::placeholder { color: #bbb; font-size: 15px; }
-    .cfield input:focus, .cfield select:focus, .cfield textarea:focus {
-      border-bottom-color: var(--black);
-    }
-    .cfield-line {
-      position: absolute; bottom: 0; left: 0;
-      height: 2px; width: 0; background: var(--gold);
-      transition: width 0.35s var(--ease-out-expo);
-    }
-    .cfield input:focus ~ .cfield-line,
-    .cfield select:focus ~ .cfield-line,
-    .cfield textarea:focus ~ .cfield-line { width: 100%; }
-    .cfield textarea { resize: none; height: 80px; line-height: 1.6; }
-    .cfield select option { color: var(--black); background: #fff; }
-    .cfield-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-
-    .csubmit {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 100%;
-      background: var(--gold); color: var(--black);
-      border: none;
-      padding: 18px 28px;
-      font-family: var(--font-display);
-      font-size: 13px; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.25s, transform 0.2s;
-      margin-top: 12px;
-    }
-    .csubmit:hover { background: var(--gold-deep); transform: translateY(-2px); }
-    .csubmit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .csubmit-arrow { font-size: 18px; transition: transform 0.2s; }
-    .csubmit:hover .csubmit-arrow { transform: translateX(4px); }
-
-    .cresult {
-      margin-top: 18px; font-size: 13px;
-      display: none; letter-spacing: 0.01em;
-    }
-    .cresult.ok { color: #2d7a2d; display: block; }
-    .cresult.err { color: #c0392b; display: block; }
-
-    /* 모바일 전용 다크 헤더 */
-    .cmodal-mobile-header {
-      display: none;
-    }
-    @media (max-width: 768px) {
-      .cmodal-left { display: none; }
-      .cmodal-right { transform: translateY(40px); width: 100%; }
-      .cmodal-overlay.open .cmodal-right { transform: translateY(0); }
-      .cmodal-right-inner { padding: 28px 24px 40px; max-width: 100%; }
-      .cfield-row { grid-template-columns: 1fr; gap: 0; }
-
-      .cmodal-mobile-header {
-        display: block;
-        background: var(--black);
-        padding: 44px 24px 28px;
-        position: relative;
-        overflow: hidden;
-      }
-      .cmodal-mobile-header-label {
-        font-family: var(--font-display);
-        font-size: 11px; font-weight: 600;
-        letter-spacing: 0.14em; text-transform: uppercase;
-        color: rgba(255,255,255,0.5);
-        margin-bottom: 12px;
-      }
-      .cmodal-mobile-header-title {
-        font-family: var(--font-display);
-        font-size: clamp(28px, 8vw, 40px);
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1.05;
-        color: #fff;
-        margin: 0;
-      }
-      .cmodal-mobile-header-title em {
-        font-style: italic;
-        font-family: var(--font-serif);
-        font-weight: 300;
-        color: var(--gold);
-        font-size: 1.08em;
-      }
-      .cmodal-mobile-header-deco {
-        position: absolute;
-        width: 180px; height: 180px;
-        border: 0.5px solid rgba(251,178,0,0.12);
-        border-radius: 50%;
-        bottom: -60px; right: -40px;
-        pointer-events: none;
-      }
-    }
+    .filters { justify-content:center; flex-wrap:nowrap; gap:28px; margin-bottom:12px; overflow-x:auto; scrollbar-width:none; }
+    .filters::-webkit-scrollbar { display:none; }
+    .filter-btn { flex:0 0 auto; text-transform:uppercase; }
+    .filter-detail { display:flex; gap:16px; margin:0 0 16px; flex-wrap:wrap; }
+    .filter-detail:empty { display:none; }
+    .filter-select { min-height:44px; max-width:100%; padding:0 24px 0 0; border:0; border-bottom:1px solid var(--nav-line); border-radius:0; background:var(--black); color:var(--nav-muted); font:400 12px var(--font-body); letter-spacing:0; }
+    .pcard-badge,.pcard-id { display:none; }
+    @media(max-width:768px) { .filters { justify-content:flex-start; gap:16px; } .filter-btn { font-size:10px; } }
   </style>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/contact.css?v=20260910">
+<script src="/contact.js?v=20260910" defer></script>
 </head>
 <body>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-mask">
-    <div class="loader-mask-text" id="loaderText">NADAUN</div>
-    <div class="loader-mask-fill" id="loaderFill">NADAUN</div>
-  </div>
-  <div class="loader-sub">Event &amp; Corporate Photography</div>
-  <div class="loader-count" id="loaderCount">0%</div>
-  <div class="loader-progress" id="loaderProgress"></div>
-</div>
 
 <!-- HEADER -->
 <header id="hdr">
@@ -980,24 +792,10 @@
     <a href="#">Projects</a>
     <a href="#" class="nav-contact" onclick="openContact(event)">Contact</a>
   </nav>
-  <button class="nav-toggle" id="navToggle" aria-label="메뉴">
-    <span></span><span></span><span></span>
-  </button>
 </header>
-
-<!-- 모바일 메뉴 -->
-<div class="nav-mobile" id="navMobile">
-  <a href="#" onclick="closeMobileNav()">Projects</a>
-  <a href="#" onclick="closeMobileNav(); openContact(event)">Contact</a>
-</div>
 
 <!-- SEO H1 (visually hidden) -->
 <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">기업행사·브랜딩·광고사진·지면·포스터 촬영 전문 나다운 포토그래피</h1>
-
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="marquee-track" id="mTrack"></div>
-</div>
 
 <!-- PROJECTS -->
 <section class="projects-wrap">
@@ -1005,6 +803,7 @@
     <span class="grid-count" id="projCount">36 Projects</span>
   </div>
   <div class="filters" id="filterWrap"></div>
+  <div class="filter-detail" id="filterDetail"></div>
   <div class="projects-grid" id="pGrid"></div>
 </section>
 
@@ -1015,7 +814,7 @@
       <div class="gallery-proj-name" id="galName">—</div>
       <div class="gallery-proj-sub" id="galSub">—</div>
     </div>
-    <button class="gallery-close" id="galClose">✕</button>
+    <button class="gallery-close" id="galClose" aria-label="갤러리 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
   </div>
   <div class="gallery-grid" id="galGrid"></div>
 </div>
@@ -1024,7 +823,7 @@
 <div id="photoview">
   <div class="pv-header">
     <span class="pv-meta" id="pvMeta"></span>
-    <button class="pv-close" id="pvClose">✕</button>
+    <button class="pv-close" id="pvClose" aria-label="사진 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
   </div>
   <div class="pv-scroll" id="pvScroll"></div>
   <div class="pv-scrubber" id="pvScrubber">
@@ -1446,39 +1245,6 @@ const COLS = ['c6','c6','c6','c6','c6','c6'];
 
 function addHover(el){ /* no-op */ }
 
-/* ── LOADER (web-demo 동일 시퀀스) ── */
-const loaderEl    = document.getElementById('loader');
-const loaderText  = document.getElementById('loaderText');
-const loaderFill  = document.getElementById('loaderFill');
-const loaderProg  = document.getElementById('loaderProgress');
-const loaderCount = document.getElementById('loaderCount');
-
-gsap.set([loaderText, loaderFill], { y: 40, opacity: 0 });
-gsap.set('.loader-sub', { opacity: 0, y: 10 });
-
-const loaderTl = gsap.timeline();
-let prog = { v: 0 };
-
-loaderTl
-  // Phase 1: 아웃라인 글씨 아래서 올라옴
-  .to([loaderText, loaderFill], { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out' })
-  .to('.loader-sub', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.4')
-  // Phase 2: 왼→오 채워지며 프로그레스 동기화
-  .to(loaderFill,  { clipPath: 'inset(0 0% 0 0)', duration: 2.4, ease: 'power2.inOut' }, 1.0)
-  .to(loaderProg,  { width: '100%',               duration: 2.4, ease: 'power2.inOut' }, 1.0)
-  .to(prog, { v: 100, duration: 2.4, ease: 'power2.inOut',
-    onUpdate: ()=>{ loaderCount.textContent = Math.round(prog.v) + '%'; }
-  }, 1.0)
-  // Phase 3: 요소들 위로 사라짐
-  .to(['.loader-sub', loaderCount, loaderProg], { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in', delay: 0.3 })
-  .to([loaderText, loaderFill], { y: -80, opacity: 0, duration: 0.5, ease: 'power3.in' }, '-=0.2')
-  // Phase 4: 로더 커튼 위로 벗겨짐
-  .to(loaderEl, { yPercent: -100, duration: 0.9, ease: 'power3.inOut',
-    onComplete: ()=>{ loaderEl.style.display='none'; }
-  }, '-=0.1')
-  // Phase 5: 헤더 등장
-  .from('#hdr', { y: -72, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.5');
-
 /* ── MARQUEE ── */
 const mWords = [
   'Samsung','Hyundai','LG','CJ','LS','Lotte','SK','Hanwha','Posco','KT',
@@ -1489,12 +1255,12 @@ const mWords = [
   'Beethoven Philharmonic','Esteban','GoodRich Show','Human Intelligence','Beyblade',
   'Tilta','Manfrotto','Teradek','RED','ARRI'
 ];
-const mTrack = document.getElementById('mTrack');
+const mTrack = document.createElement('div'); mTrack.className='client-index'; mTrack.hidden=true; document.body.appendChild(mTrack);
 [...mWords,...mWords].forEach(w=>{
   const s=document.createElement('span'); s.className='marquee-item';
   s.innerHTML=`${w}<span class="marquee-dot"></span>`; mTrack.appendChild(s);
 });
-gsap.to(mTrack,{ x:-mTrack.scrollWidth/2, duration:60, ease:'none', repeat:-1 });
+
 
 /* ── BUILD PROJECT GRID ── */
 const pGrid = document.getElementById('pGrid');
@@ -1511,6 +1277,8 @@ function buildGrid(animate){
       const card = document.createElement('div');
       card.className = 'pcard ' + col + (RATIO45.has(proj.category) ? ' ratio45' : '');
       card.dataset.id = proj.id;
+      card.tabIndex = 0; card.setAttribute('role','button'); card.setAttribute('aria-label',proj.name);
+      card.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); openLightbox(proj.id,0); } });
 
       const img = document.createElement('img');
       img.className = 'pcard-img';
@@ -1535,70 +1303,62 @@ function buildGrid(animate){
       pGrid.appendChild(card);
       card.addEventListener('click', () => openLightbox(proj.id, 0));
     });
-    gsap.from(pGrid.children, {
+    if (!matchMedia('(prefers-reduced-motion:reduce)').matches) gsap.from(pGrid.children, {
       opacity: 0, y: 20, duration: .45, ease: 'power3.out',
       stagger: { amount: 0.45, from: 'start' }
     });
   }
 
-  if(animate && pGrid.children.length > 0){
-    gsap.to(pGrid.children, {
-      opacity: 0, y: -12, duration: .22, ease: 'power2.in',
-      stagger: { amount: 0.15, from: 'start' },
-      onComplete: render
-    });
-  } else {
-    render();
-  }
+  gsap.killTweensOf(pGrid.children);
+  render();
 }
 
 /* ── FILTERS (대주제 탭 + 하위 드롭다운) ── */
 const filterWrap = document.getElementById('filterWrap');
 let activeMain = 'all', activeSub = 'all';
 
+const PHOTO_DISCIPLINES = [
+  { id:'all', label:'All', categories:[] },
+  { id:'campaign', label:'Campaign', categories:['Collaboration','Poster'] },
+  { id:'corporate', label:'Corporate', categories:['Corporate','COMPANY PROFILE','Business Profile'] },
+  { id:'event', label:'Event', categories:['Concert & Festival','External Event'] },
+  { id:'editorial', label:'Editorial', categories:['Editorial','Lookbook','Magazine'] },
+  { id:'portrait', label:'Portrait', categories:['Portrait','Actor Profile','Family','Couple','Group'] },
+];
+let activeDiscipline = 'all';
 function buildFilters(){
   filterWrap.innerHTML='';
-
-  CATS_MAIN.forEach(cat=>{
-    const wrap = document.createElement('div');
-    wrap.className = 'filter-group';
-
-    const btn = document.createElement('button');
-    btn.className='filter-btn'+(cat===activeMain?' active':'');
-    btn.textContent = cat==='all'?'All':cat;
-    btn.dataset.cat = cat;
-
-    btn.addEventListener('click',()=>{
-      activeMain = cat; activeSub = 'all';
+  filterWrap.setAttribute('role','group'); filterWrap.setAttribute('aria-label','Photography category');
+  PHOTO_DISCIPLINES.forEach(discipline => {
+    const btn=document.createElement('button'); btn.type='button';
+    btn.className='filter-btn'+(discipline.id===activeDiscipline?' active':'');
+    btn.textContent=discipline.label; btn.setAttribute('aria-pressed', String(discipline.id===activeDiscipline));
+    btn.addEventListener('click', () => {
+      activeDiscipline=discipline.id; activeMain='all'; activeSub='all';
       buildFilters(); buildGrid(true);
     });
-    addHover(btn); wrap.appendChild(btn);
-
-    // 하위 메뉴
-    if(cat !== 'all' && cat === activeMain){
-      const subs = [...new Set(PROJECTS.filter(p=>p.category===cat).map(p=>p.sub))];
-      if(subs.length > 1){
-        const subRow = document.createElement('div');
-        subRow.className = 'filter-sub';
-
-        const allBtn = document.createElement('button');
-        allBtn.className='filter-sub-btn'+(activeSub==='all'?' active':'');
-        allBtn.textContent = '전체';
-        allBtn.addEventListener('click',()=>{ activeSub='all'; buildFilters(); buildGrid(true); });
-        addHover(allBtn); subRow.appendChild(allBtn);
-
-        subs.forEach(s=>{
-          const sb = document.createElement('button');
-          sb.className='filter-sub-btn'+(activeSub===s?' active':'');
-          sb.textContent = s;
-          sb.addEventListener('click',()=>{ activeSub=s; buildFilters(); buildGrid(true); });
-          addHover(sb); subRow.appendChild(sb);
-        });
-        wrap.appendChild(subRow);
-      }
-    }
-    filterWrap.appendChild(wrap);
+    filterWrap.appendChild(btn);
   });
+  const detail=document.getElementById('filterDetail'); detail.replaceChildren();
+  const discipline=PHOTO_DISCIPLINES.find(item=>item.id===activeDiscipline);
+  if(activeDiscipline==='all') return;
+  const categories=discipline.categories.filter(category=>PROJECTS.some(p=>p.category===category));
+  const categorySelect=document.createElement('select');
+  categorySelect.setAttribute('aria-label','세부 촬영 분야'); categorySelect.className='filter-select';
+  [['all','All '+discipline.label], ...categories.map(c=>[c,c==='COMPANY PROFILE'?'Company Profile':c])].forEach(([value,label]) => {
+    const option=document.createElement('option'); option.value=value; option.textContent=label; categorySelect.appendChild(option);
+  });
+  categorySelect.value=activeMain;
+  categorySelect.addEventListener('change',()=>{ activeMain=categorySelect.value; activeSub='all'; buildFilters(); buildGrid(true); });
+  detail.appendChild(categorySelect);
+  const subs=activeMain==='all'?[]:[...new Set(PROJECTS.filter(p=>p.category===activeMain).map(p=>p.sub))];
+  if(subs.length>1) {
+    const subSelect=document.createElement('select'); subSelect.className='filter-select'; subSelect.setAttribute('aria-label','프로젝트 세부 유형');
+    [['all','All projects'], ...subs.map(sub=>[sub,sub])].forEach(([value,label])=>{ const option=document.createElement('option'); option.value=value; option.textContent=label; subSelect.appendChild(option); });
+    subSelect.value=activeSub;
+    subSelect.addEventListener('change',()=>{ activeSub=subSelect.value; buildGrid(true); });
+    detail.appendChild(subSelect);
+  }
 }
 
 // 라벨 카테고리(인물/프로필류)는 진입/새로고침마다 무작위 순서로 노출.
@@ -1617,7 +1377,9 @@ function _projectDate(p){
 }
 
 function getFilteredProjects(){
+  const discipline=PHOTO_DISCIPLINES.find(item=>item.id===activeDiscipline);
   const list = PROJECTS.filter(p=>{
+    if(activeDiscipline!=='all' && !discipline.categories.includes(p.category)) return false;
     if(activeMain==='all') return true;
     if(p.category!==activeMain) return false;
     if(activeSub==='all') return true;
@@ -1658,20 +1420,6 @@ buildFilters(); buildGrid();
 /* ── HEADER SCROLL ── */
 window.addEventListener('scroll',()=>
   document.getElementById('hdr').classList.toggle('scrolled',scrollY>30));
-
-/* ── MOBILE NAV ── */
-const navToggle = document.getElementById('navToggle');
-const navMobile = document.getElementById('navMobile');
-navToggle.addEventListener('click',()=>{
-  const open = navMobile.classList.toggle('open');
-  document.getElementById('hdr').classList.toggle('nav-open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-});
-function closeMobileNav(){
-  navMobile.classList.remove('open');
-  document.getElementById('hdr').classList.remove('nav-open');
-  document.body.style.overflow='';
-}
 
 /* ── GALLERY OVERLAY ── */
 let activeProj = null;
@@ -1952,12 +1700,10 @@ document.addEventListener('dragstart', e => {
 /* ── CONTACT MODAL ── */
 function openContact(e) {
   if (e) e.preventDefault();
-  document.getElementById('cmodal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  window.NadaunInquiry.open('cmodal');
 }
 function closeContact() {
-  document.getElementById('cmodal').classList.remove('open');
-  document.body.style.overflow = '';
+  window.NadaunInquiry.close('cmodal');
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.getElementById('cmodal') &&
@@ -1983,10 +1729,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = {
       name: document.getElementById('cf-name').value,
       phone: document.getElementById('cf-phone').value,
-      shootType: document.getElementById('cf-shoot').value,
+      shootType: this.querySelector('input[name="inquiryType"]:checked')?.value,
       scale: document.getElementById('cf-scale').value || '-',
       date: dateTo ? `${dateFrom} ~ ${dateTo}` : dateFrom,
-      message: document.getElementById('cf-message').value,
+      message: window.NadaunInquiry.message(this),
     };
 
     try {
@@ -2008,98 +1754,128 @@ document.addEventListener('DOMContentLoaded', function() {
       result.textContent = err.message;
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '문의 보내기 <span class="csubmit-arrow">→</span>';
+      btn.innerHTML = '문의 접수하기 <span class="csubmit-arrow" aria-hidden="true">→</span>';
     }
   });
 });
 </script>
 
 <!-- CONTACT MODAL -->
-<div class="cmodal-overlay" id="cmodal">
-
-  <!-- 왼쪽 다크 패널 -->
-  <div class="cmodal-left">
-    <div class="cmodal-left-brand">Project NADAUN Team</div>
-    <div>
-      <h2 class="cmodal-left-title">Your Story,<br>Shot At Its<br><em>Finest.</em></h2>
-      <p class="cmodal-left-sub">Every brand has a defining moment.<br>We make sure it's unforgettable.</p>
-    </div>
-    <div class="cmodal-left-brand" style="color:rgba(255,255,255,0.35)">rbsent.info@gmail.com</div>
-    <div class="cmodal-left-deco"></div>
-    <div class="cmodal-left-deco2"></div>
-  </div>
-
-  <!-- 오른쪽 폼 패널 -->
-  <div class="cmodal-right">
-    <button class="cmodal-close" onclick="closeContact()">✕</button>
-    <!-- 모바일 전용 다크 헤더 -->
-    <div class="cmodal-mobile-header">
-      <div class="cmodal-mobile-header-label">Project NADAUN Team</div>
-      <h2 class="cmodal-mobile-header-title">Your Story,<br>Shot At Its <em>Finest.</em></h2>
-      <div class="cmodal-mobile-header-deco"></div>
-    </div>
-    <div class="cmodal-right-inner">
-      <div class="cform-eyebrow">Inquiry</div>
-      <h3 class="cform-title">Let's Work Together</h3>
-      <form id="contactForm" autocomplete="off">
-        <div class="cfield-row">
-          <div class="cfield">
-            <label for="cf-name">Name *</label>
-            <input type="text" id="cf-name" placeholder="Full name" required>
-            <span class="cfield-line"></span>
-          </div>
-          <div class="cfield">
-            <label for="cf-phone">Phone *</label>
-            <input type="tel" id="cf-phone" placeholder="010-0000-0000" required>
-            <span class="cfield-line"></span>
-          </div>
-        </div>
-        <div class="cfield">
-          <label for="cf-shoot">Shoot Type 촬영 종류 *</label>
-          <select id="cf-shoot" required>
-            <option value="" disabled selected>촬영 종류 선택 (Select type)</option>
-            <option>Editorial / 에디토리얼</option>
-            <option>Magazine / 매거진</option>
-            <option>Corporate / 기업</option>
-            <option>External Event / 외부 행사</option>
-            <option>Concert &amp; Festival / 콘서트·페스티벌</option>
-            <option>Wedding / 웨딩</option>
-            <option>Other / 기타</option>
-          </select>
-          <span class="cfield-line"></span>
-        </div>
-        <div class="cfield-row">
-          <div class="cfield">
-            <label for="cf-date-from">Date From *</label>
-            <input type="date" id="cf-date-from" required>
-            <span class="cfield-line"></span>
-          </div>
-          <div class="cfield">
-            <label for="cf-date-to">Date To</label>
-            <input type="date" id="cf-date-to">
-            <span class="cfield-line"></span>
-          </div>
-        </div>
-        <div class="cfield">
-          <label for="cf-scale">규모 / 예산 (Scale / Budget)</label>
-          <input type="text" id="cf-scale" placeholder="예산 · 인원 · 규모 등 자유롭게">
-          <span class="cfield-line"></span>
-        </div>
-        <div class="cfield">
-          <label for="cf-message">Details</label>
-          <textarea id="cf-message" placeholder="Location, number of people, duration, or anything else..."></textarea>
-          <span class="cfield-line"></span>
-        </div>
-        <button type="submit" class="csubmit" id="csubmitBtn">
-          <span>Send Inquiry</span>
-          <span class="csubmit-arrow">→</span>
-        </button>
-        <div class="cresult" id="cresult"></div>
-      </form>
-    </div>
-  </div>
-
+<dialog class="nq-dialog" id="cmodal" aria-label="NADAUN PHOTO 문의하기">
+<div class="nq-top">
+<span class="nq-brand">NADAUN PHOTO — 문의하기</span>
+<button class="nq-close" type="button" aria-label="문의창 닫기">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="m6 6 12 12M18 6 6 18"/>
+</svg>
+</button>
 </div>
+<form class="nq-form" id="contactForm">
+<section class="nq-section">
+<p class="nq-number">01 — 브랜드</p>
+<h2 class="nq-question" tabindex="-1">어떤 브랜드와<br>함께할까요?</h2>
+<label class="nq-field" for="cf-brand">
+<span class="nq-label">브랜드 / 회사명 · 선택</span>
+<input id="cf-brand" name="brand" type="text" placeholder="Brand / Company">
+</label>
+</section>
+<section class="nq-section">
+<p class="nq-number">02 — 담당자</p>
+<h2 class="nq-question" tabindex="-1">연락 주실<br>분은 누구인가요?</h2>
+<div class="nq-grid">
+<label class="nq-field" for="cf-name">
+<span class="nq-label">성함 *</span>
+<input id="cf-name" name="cf-name" type="text" placeholder="성함 / 직급" required autocomplete="name">
+</label>
+<label class="nq-field" for="cf-phone">
+<span class="nq-label">연락처 *</span>
+<input id="cf-phone" name="cf-phone" type="tel" placeholder="010-0000-0000" required autocomplete="tel">
+</label>
+</div>
+<div class="nq-wide">
+<label class="nq-field" for="cf-email">
+<span class="nq-label">이메일 · 선택</span>
+<input id="cf-email" name="email" type="email" placeholder="name@company.com" autocomplete="email">
+</label>
+</div>
+</section>
+<section class="nq-section">
+<p class="nq-number">03 — 사진 제작</p>
+<h2 class="nq-question" tabindex="-1">어떤 사진을<br>남기고 싶으세요?</h2>
+<fieldset class="nq-types" aria-label="사진 촬영 종류 *">
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="광고 · 제품 사진" required>
+<span>광고 · 제품 사진</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="브랜드 · 룩북" required>
+<span>브랜드 · 룩북</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="화보 · 매거진" required>
+<span>화보 · 매거진</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="인물 · 프로필" required>
+<span>인물 · 프로필</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="기업 행사 사진" required>
+<span>기업 행사 사진</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="콘서트 · 페스티벌 사진" required>
+<span>콘서트 · 페스티벌 사진</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="지면 · 포스터" required>
+<span>지면 · 포스터</span>
+</label>
+<label class="nq-choice">
+<input type="radio" name="inquiryType" value="기타 사진 촬영" required>
+<span>기타 사진 촬영</span>
+</label>
+</fieldset>
+</section>
+<section class="nq-section">
+<p class="nq-number">04 — 일정과 예산</p>
+<h2 class="nq-question" tabindex="-1">프로젝트<br>규모를 알려주세요.</h2>
+<div class="nq-grid">
+<label class="nq-field" for="cf-date-from">
+<span class="nq-label">촬영 시작일 *</span>
+<input id="cf-date-from" name="cf-date-from" type="date" placeholder="" required>
+</label>
+<label class="nq-field" for="cf-date-to">
+<span class="nq-label">촬영 종료일 · 선택</span>
+<input id="cf-date-to" name="cf-date-to" type="date" placeholder="">
+</label>
+</div>
+<div class="nq-wide">
+<label class="nq-field" for="cf-scale">
+<span class="nq-label">규모 / 예산 · 선택</span>
+<input id="cf-scale" name="cf-scale" type="text" placeholder="예산, 인원, 촬영 규모 등">
+</label>
+</div>
+</section>
+<section class="nq-section">
+<p class="nq-number">05 — 상세 내용</p>
+<h2 class="nq-question" tabindex="-1">프로젝트를<br>소개해주세요.</h2>
+<label class="nq-field" for="cf-message">
+<span class="nq-label">사진 프로젝트 내용 · 선택</span>
+<textarea id="cf-message" rows="4" placeholder="촬영 대상, 필요한 컷 수, 장소, 레퍼런스 등을 알려주세요.">
+</textarea>
+</label>
+<button type="submit" id="csubmitBtn" class="nq-submit csubmit">
+<span>문의 접수하기</span>
+<span class="nq-arrow" aria-hidden="true">→</span>
+</button>
+<div id="cresult" class="cresult" role="status" aria-live="polite">
+</div>
+<p class="nq-foot">NADAUN PHOTO · <a href="mailto:rbsent.info@gmail.com">rbsent.info@gmail.com</a>
+</p>
+</section>
+</form>
+</dialog>
 
 <!-- ─── 워터마크 (lightbox 활성 시 body.pv-on으로 표시) ─── -->
 <div class="pv-wm pv-wm-tr"><img src="images/nadaun_logo.png" alt=""></div>
