@@ -1769,7 +1769,7 @@ document.addEventListener('keydown', function(e) {
   const max = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
   const target = e.key === 'Home' ? 0 : e.key === 'End' ? max : scroll.scrollTop + (e.key === 'PageDown' ? 1 : -1) * scroll.clientHeight * 3;
   // Boundary keys settle immediately; End remains at the last photo as lazy images finish.
-  scroll.scrollTo({top:Math.max(0,Math.min(max,target)),behavior:pvReducedMotion() || e.key === 'Home' || e.key === 'End' ? 'instant' : 'smooth'});
+  scroll.scrollTo({top:Math.max(0,Math.min(max,target)),behavior:'instant'});
 });
 
 /* ── 사이드 스크러버 ── */
