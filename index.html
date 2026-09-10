@@ -771,6 +771,16 @@
     .filter-select { min-height:44px; max-width:100%; padding:0 24px 0 0; border:0; border-bottom:1px solid var(--nav-line); border-radius:0; background:var(--black); color:var(--nav-muted); font:400 12px var(--font-body); letter-spacing:0; }
     .pcard-badge,.pcard-id { display:none; }
     @media(max-width:768px) { .filters { justify-content:flex-start; gap:16px; } .filter-btn { font-size:10px; } }
+    /* Direct category navigation, matching the video portfolio. */
+    @media(min-width:901px) {
+      .filters { position:fixed; top:calc(50% + var(--nav-height)/2); right:3vw; width:max-content; max-width:44vw; max-height:calc(100dvh - var(--nav-height) - 40px); transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; gap:0; margin:0; overflow-y:auto; overflow-x:hidden; z-index:55; background:none; pointer-events:none; }
+      .filter-btn { display:block; flex-shrink:0; min-height:34px; font-size:clamp(19px,2.4vw,36px); line-height:1.12; font-weight:800; letter-spacing:-.025em; text-align:right; color:var(--off-white); text-shadow:0 2px 12px rgba(0,0,0,.8); pointer-events:auto; }
+      .filter-btn.active,.filter-btn:hover { color:var(--gold); box-shadow:none; }
+    }
+    @media(max-width:900px) {
+      .filters { display:flex; flex-wrap:nowrap; justify-content:flex-start; gap:20px; margin:0 0 12px; overflow-x:auto; }
+      .filter-btn { font-size:11px; }
+    }
   </style>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -800,10 +810,9 @@
 <!-- PROJECTS -->
 <section class="projects-wrap">
   <div class="grid-header">
-    <span class="grid-count" id="projCount">36 Projects</span>
+    <span class="grid-count" id="projCount">Projects</span>
   </div>
-  <div class="filters" id="filterWrap"></div>
-  <div class="filter-detail" id="filterDetail"></div>
+  <nav class="filters" id="filterWrap" aria-label="Photography category"></nav>
   <div class="projects-grid" id="pGrid"></div>
 </section>
 
@@ -1284,16 +1293,15 @@ function buildGrid(animate){
       img.className = 'pcard-img';
       const _ph = (proj.photos && proj.photos.length) ? proj.photos : [proj.cover];
       img.src = _ph[Math.floor(Math.random() * _ph.length)];   // 새로고침마다 랜덤 썸네일
-      img.alt = 'NADAUN 나다운 ' + proj.category + ' 촬영 - ' + proj.name;
+      img.alt = 'NADAUN 나다운 촬영 - ' + proj.name;
       img.loading = i < 2 ? 'eager' : 'lazy';
       img.decoding = 'async';
       if (i < 2) img.fetchPriority = 'high';
 
       const info = document.createElement('div'); info.className = 'pcard-info';
-      const cat  = document.createElement('div'); cat.className  = 'pcard-cat';  cat.textContent = proj.category;
       const name = document.createElement('div'); name.className = 'pcard-name'; name.textContent = proj.name;
       const meta = document.createElement('div'); meta.className = 'pcard-meta'; meta.textContent = proj.photos.length + ' Photos';
-      info.appendChild(cat); info.appendChild(name); info.appendChild(meta);
+      info.appendChild(name); info.appendChild(meta);
 
       const badge = document.createElement('div'); badge.className = 'pcard-badge'; badge.textContent = proj.photos.length + ' Photos';
       const open  = document.createElement('div'); open.className  = 'pcard-open';  open.textContent = '↗';
@@ -1313,52 +1321,23 @@ function buildGrid(animate){
   render();
 }
 
-/* ── FILTERS (대주제 탭 + 하위 드롭다운) ── */
+/* Each existing shooting category is directly selectable; no inferred groups or submenus. */
+let activeMain = 'all';
 const filterWrap = document.getElementById('filterWrap');
-let activeMain = 'all', activeSub = 'all';
-
-const PHOTO_DISCIPLINES = [
-  { id:'all', label:'All', categories:[] },
-  { id:'campaign', label:'Campaign', categories:['Collaboration','Poster'] },
-  { id:'corporate', label:'Corporate', categories:['Corporate','COMPANY PROFILE','Business Profile'] },
-  { id:'event', label:'Event', categories:['Concert & Festival','External Event'] },
-  { id:'editorial', label:'Editorial', categories:['Editorial','Lookbook','Magazine'] },
-  { id:'portrait', label:'Portrait', categories:['Portrait','Actor Profile','Family','Couple','Group'] },
-];
-let activeDiscipline = 'all';
 function buildFilters(){
-  filterWrap.innerHTML='';
-  filterWrap.setAttribute('role','group'); filterWrap.setAttribute('aria-label','Photography category');
-  PHOTO_DISCIPLINES.forEach(discipline => {
+  filterWrap.replaceChildren();
+  ['all', ...new Set(PROJECTS.map(p=>p.category))].forEach(category=>{
     const btn=document.createElement('button'); btn.type='button';
-    btn.className='filter-btn'+(discipline.id===activeDiscipline?' active':'');
-    btn.textContent=discipline.label; btn.setAttribute('aria-pressed', String(discipline.id===activeDiscipline));
-    btn.addEventListener('click', () => {
-      activeDiscipline=discipline.id; activeMain='all'; activeSub='all';
+    btn.className='filter-btn'+(category===activeMain?' active':'');
+    btn.textContent=category==='all'?'ALL':category;
+    btn.setAttribute('aria-pressed',String(category===activeMain));
+    btn.addEventListener('click',()=>{
+      activeMain=category;
       buildFilters(); buildGrid(true);
+      window.scrollTo({top:0,behavior:'instant'});
     });
     filterWrap.appendChild(btn);
   });
-  const detail=document.getElementById('filterDetail'); detail.replaceChildren();
-  const discipline=PHOTO_DISCIPLINES.find(item=>item.id===activeDiscipline);
-  if(activeDiscipline==='all') return;
-  const categories=discipline.categories.filter(category=>PROJECTS.some(p=>p.category===category));
-  const categorySelect=document.createElement('select');
-  categorySelect.setAttribute('aria-label','세부 촬영 분야'); categorySelect.className='filter-select';
-  [['all','All '+discipline.label], ...categories.map(c=>[c,c==='COMPANY PROFILE'?'Company Profile':c])].forEach(([value,label]) => {
-    const option=document.createElement('option'); option.value=value; option.textContent=label; categorySelect.appendChild(option);
-  });
-  categorySelect.value=activeMain;
-  categorySelect.addEventListener('change',()=>{ activeMain=categorySelect.value; activeSub='all'; buildFilters(); buildGrid(true); });
-  detail.appendChild(categorySelect);
-  const subs=activeMain==='all'?[]:[...new Set(PROJECTS.filter(p=>p.category===activeMain).map(p=>p.sub))];
-  if(subs.length>1) {
-    const subSelect=document.createElement('select'); subSelect.className='filter-select'; subSelect.setAttribute('aria-label','프로젝트 세부 유형');
-    [['all','All projects'], ...subs.map(sub=>[sub,sub])].forEach(([value,label])=>{ const option=document.createElement('option'); option.value=value; option.textContent=label; subSelect.appendChild(option); });
-    subSelect.value=activeSub;
-    subSelect.addEventListener('change',()=>{ activeSub=subSelect.value; buildGrid(true); });
-    detail.appendChild(subSelect);
-  }
 }
 
 // 라벨 카테고리(인물/프로필류)는 진입/새로고침마다 무작위 순서로 노출.
@@ -1377,14 +1356,7 @@ function _projectDate(p){
 }
 
 function getFilteredProjects(){
-  const discipline=PHOTO_DISCIPLINES.find(item=>item.id===activeDiscipline);
-  const list = PROJECTS.filter(p=>{
-    if(activeDiscipline!=='all' && !discipline.categories.includes(p.category)) return false;
-    if(activeMain==='all') return true;
-    if(p.category!==activeMain) return false;
-    if(activeSub==='all') return true;
-    return p.sub===activeSub;
-  });
+  const list = PROJECTS.filter(p => activeMain==='all' || p.category===activeMain);
   if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) _shuffle(list);
   if(NEWEST_FIRST_CATS.has(activeMain)) {
     list.sort((a,b)=>{
@@ -1427,7 +1399,7 @@ let activeProj = null;
 function openGallery(id){
   activeProj = PROJECTS.find(p=>p.id===id);
   document.getElementById('galName').textContent = activeProj.name;
-  document.getElementById('galSub').textContent = `${activeProj.category} · ${activeProj.year} · ${activeProj.photos.length} Photos`;
+  document.getElementById('galSub').textContent = `${activeProj.year} · ${activeProj.photos.length} Photos`;
 
   const grid = document.getElementById('galGrid');
   grid.innerHTML='';
