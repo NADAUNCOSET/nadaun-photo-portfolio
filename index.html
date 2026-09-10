@@ -809,6 +809,16 @@
     #filterWrap.is-scrolling .filter-btn:not(.active):not(:hover):not(:focus-visible) { opacity:.48; }
     @media(hover:hover) and (pointer:fine) { #filterWrap:has(.filter-btn:hover) .filter-btn:not(:hover):not(.active) { opacity:.42; } }
     @media(prefers-reduced-motion:reduce) { #filterWrap .filter-btn,#filterWrap .filter-btn::before,#filterWrap .filter-btn::after { transition:none; } }
+
+    /* Large right-side category reel; scrolling stays within this navigation. */
+    #filterWrap { --category-edge:clamp(28px,5svh,64px); width:max-content; max-width:min(68vw,960px); height:min(72svh,calc(100dvh - var(--nav-height) - 40px)); max-height:none; padding:var(--category-edge) 8px; box-sizing:border-box; overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain; touch-action:pan-y; pointer-events:auto; scroll-padding-block:var(--category-edge); scrollbar-width:none; -webkit-mask-image:linear-gradient(to bottom,transparent,#000 var(--category-edge),#000 calc(100% - var(--category-edge)),transparent); mask-image:linear-gradient(to bottom,transparent,#000 var(--category-edge),#000 calc(100% - var(--category-edge)),transparent); }
+    #filterWrap::-webkit-scrollbar { display:none; }
+    #filterWrap .filter-btn { max-width:100%; min-height:44px; padding:6px 8px 8px 10px; font-size:clamp(64px,12.6vh,150px); line-height:.98; white-space:normal; overflow-wrap:normal; text-wrap:balance; flex-shrink:0; }
+    #filterWrap .filter-btn::after { bottom:4px; }
+    @media(max-width:900px) {
+      #filterWrap { right:10px; max-width:86vw; height:min(68svh,calc(100dvh - var(--nav-height) - 32px)); }
+      #filterWrap .filter-btn { font-size:clamp(40px,12vw,78px); line-height:1.02; }
+    }
 </style>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -1382,6 +1392,8 @@ const PHOTO_CATEGORY_ORDER = [
 let activeMain = 'all';
 const filterWrap = document.getElementById('filterWrap');
 function buildFilters(){
+  const menuScrollTop=filterWrap.scrollTop;
+  const restoreMenuFocus=filterWrap.contains(document.activeElement);
   filterWrap.replaceChildren();
   const available = [...new Set(PROJECTS.map(p=>p.category))];
   const ordered = [...PHOTO_CATEGORY_ORDER.filter(category=>available.includes(category)),
@@ -1399,6 +1411,8 @@ function buildFilters(){
     });
     filterWrap.appendChild(btn);
   });
+  filterWrap.scrollTop=menuScrollTop;
+  if(restoreMenuFocus) filterWrap.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
 }
 
 // 라벨 카테고리(인물/프로필류)는 진입/새로고침마다 무작위 순서로 노출.
