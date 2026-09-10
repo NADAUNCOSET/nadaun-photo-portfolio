@@ -670,13 +670,14 @@
 
     /* Masonry — 검은 공간 없이 자연스럽게 채움 */
     .pv-grid {
-      column-count: 2;
-      column-gap: 0;
+      display: flex;
+      gap: 0;
       padding: 0;
     }
-    @media (min-width: 2000px)  { .pv-grid { column-count: 3; } }
-    @media (min-width: 3000px)  { .pv-grid { column-count: 4; } }
-    @media (max-width: 1099px)  { .pv-grid { column-count: 1; } }
+    .pv-column { flex: 1; min-width: 0; }
+    .pv-grid .pv-img-wrap { aspect-ratio: 3 / 2; }
+    .pv-grid .pv-img-wrap img { height: 100%; object-fit: contain; }
+    @media (prefers-reduced-motion: reduce) { .pv-scroll { transition: none; } }
 
     .pv-img {
       display: block;
@@ -1334,6 +1335,8 @@ const mTrack = document.createElement('div'); mTrack.className='client-index'; m
 
 
 /* ── BUILD PROJECT GRID ── */
+const projectCovers = new Map();
+const projectShuffleRanks = new Map();
 const pGrid = document.getElementById('pGrid');
 
 
@@ -1376,7 +1379,8 @@ function buildGrid(animate){
       const img = document.createElement('img');
       img.className = 'pcard-img';
       const _ph = (proj.photos && proj.photos.length) ? proj.photos : [proj.cover];
-      img.src = _ph[Math.floor(Math.random() * _ph.length)];   // 새로고침마다 랜덤 썸네일
+      if (!projectCovers.has(proj.id)) projectCovers.set(proj.id, _ph[Math.floor(Math.random() * _ph.length)]);
+      img.src = projectCovers.get(proj.id);
       img.alt = 'NADAUN 나다운 촬영 - ' + proj.name;
       img.loading = i < 2 ? 'eager' : 'lazy';
       img.decoding = 'async';
@@ -1459,7 +1463,10 @@ function _projectDate(p){
 
 function getFilteredProjects(){
   const list = PROJECTS.filter(p => activeMain==='all' || p.category===activeMain);
-  if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) _shuffle(list);
+  if(activeMain!=='all' && SHUFFLE_CATS.has(activeMain)) {
+    list.forEach(p => { if (!projectShuffleRanks.has(p.id)) projectShuffleRanks.set(p.id,Math.random()); });
+    list.sort((a,b) => projectShuffleRanks.get(a.id)-projectShuffleRanks.get(b.id));
+  }
   if(NEWEST_FIRST_CATS.has(activeMain)) {
     list.sort((a,b)=>{
       const pinnedIds = activeMain==='Actor Profile'
@@ -1536,34 +1543,44 @@ let pvProj = null;
 let pvAutoRaf = null;
 let pvUserScrollTimer = null;
 let pvNextTimer = null;
+let pvTransitionTimer = null;
+let pvRequest = 0;
+let pvPendingProject = null;
+let pvReady = false;
+let pvHoldEnd = false;
+const pvReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+function pvCancelPending() {
+  pvStopAutoScroll();
+  clearTimeout(pvNextTimer);
+  clearTimeout(pvUserScrollTimer);
+  clearTimeout(pvTransitionTimer);
+}
+function pvIsCurrent(request) {
+  return request === pvRequest && document.getElementById('photoview').classList.contains('open');
+}
 const PV_SPEED = 2.0; // px per frame — 부드러운 속도
 
 function pvSwitchProject(targetProj) {
   if (!targetProj) return;
-  pvStopAutoScroll();
-  clearTimeout(pvNextTimer);
+  pvCancelPending();
+  pvReady = false;
+  pvPendingProject = targetProj;
+  const request = ++pvRequest;
   const scroll = document.getElementById('pvScroll');
   scroll.classList.add('pv-fading');
-  pvNextTimer = setTimeout(() => {
-    scroll.dataset.projId = '-1';
-    openLightbox(targetProj.id, 0);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => scroll.classList.remove('pv-fading'));
-    });
-  }, 280);
+  pvTransitionTimer = setTimeout(() => {
+    if (pvIsCurrent(request)) openLightbox(targetProj.id, 0);
+  }, pvReducedMotion() ? 0 : 280);
 }
-
-function pvNextProject() {
+function pvAdjacentProject(direction) {
+  if (!pvProj) return;
   const visible = getFilteredProjects();
-  const curIdx = visible.findIndex(p => p.id === pvProj.id);
-  pvSwitchProject(visible[(curIdx + 1) % visible.length]);
+  if (!visible.length) return;
+  const curIdx = visible.findIndex(p => p.id === (pvPendingProject || pvProj).id);
+  pvSwitchProject(visible[(curIdx + direction + visible.length) % visible.length]);
 }
-
-function pvPrevProject() {
-  const visible = getFilteredProjects();
-  const curIdx = visible.findIndex(p => p.id === pvProj.id);
-  pvSwitchProject(visible[(curIdx - 1 + visible.length) % visible.length]);
-}
+function pvNextProject() { pvAdjacentProject(1); }
+function pvPrevProject() { pvAdjacentProject(-1); }
 
 function pvUpdateNavPreviews() {
   const visible = getFilteredProjects();
@@ -1585,11 +1602,14 @@ function pvStartAutoScroll() {
   pvStopAutoScroll();
   clearTimeout(pvNextTimer);
   const scroll = document.getElementById('pvScroll');
+  const request = pvRequest;
+  if (!pvReady || !pvIsCurrent(request) || pvHoldEnd) return;
   function step() {
+    if (!pvReady || !pvIsCurrent(request) || pvHoldEnd) return;
     const maxScroll = scroll.scrollHeight - scroll.clientHeight;
     if (maxScroll > 50 && scroll.scrollTop >= maxScroll - 2) {
       pvStopAutoScroll();
-      pvNextTimer = setTimeout(pvNextProject, 1200);
+      pvNextTimer = setTimeout(() => { if (pvIsCurrent(request) && pvReady) pvNextProject(); }, 1200);
       return;
     }
     scroll.scrollTop += PV_SPEED;
@@ -1603,71 +1623,107 @@ function pvStopAutoScroll() {
 }
 
 function pvPauseAndResume() {
+  pvHoldEnd = false;
   pvStopAutoScroll();
   clearTimeout(pvNextTimer);
   clearTimeout(pvUserScrollTimer);
-  pvUserScrollTimer = setTimeout(pvStartAutoScroll, 2000);
+  const request = pvRequest;
+  pvUserScrollTimer = setTimeout(() => { if (pvIsCurrent(request) && pvReady) pvStartAutoScroll(); }, 2000);
 }
 
-function openLightbox(projId, idx) {
-  pvProj = PROJECTS.find(p => p.id === projId);
-  const scroll = document.getElementById('pvScroll');
-  pvStartWm();
-
-  if (scroll.dataset.projId !== String(projId)) {
-    scroll.innerHTML = '';
-    scroll.dataset.projId = projId;
-    const grid = document.createElement('div');
-    grid.className = 'pv-grid';
-    pvProj.photos.forEach((src, i) => {
-      const wrap = document.createElement('div');
-      wrap.className = 'pv-img-wrap';
-      wrap.id = `pv-${i}`;
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = '';
-      img.loading = i < 6 ? 'eager' : 'lazy';
-      img.decoding = 'async';
-      const shield = document.createElement('div');
-      shield.className = 'pv-img-shield';
-      wrap.appendChild(img);
-      wrap.appendChild(shield);
-      grid.appendChild(wrap);
-    });
-    scroll.appendChild(grid);
-  }
-
-  document.getElementById('pvMeta').textContent =
-    `${pvProj.name}  ·  ${pvProj.photos.length} Photos`;
-  document.getElementById('photoview').classList.add('open');
-  pvUpdateNavPreviews();
-  document.body.style.overflow = 'hidden';
-
-  requestAnimationFrame(() => {
-    if (idx > 0) {
-      const target = document.getElementById(`pv-${idx}`);
-      if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
-    } else {
-      scroll.scrollTop = 0;
-    }
-    // 첫 4장이 실제 로드된 후 스크롤 시작 — 이미지 로드 전 레이아웃 reflow로 인한 덜컹거림 방지
-    const imgs = Array.from(scroll.querySelectorAll('img')).slice(0, 4);
-    Promise.all(imgs.map(img =>
-      img.complete ? Promise.resolve() :
-      new Promise(r => { img.onload = r; img.onerror = r; })
-    )).then(() => setTimeout(pvStartAutoScroll, 60));
+function pvColumnCount() {
+  return innerWidth >= 3000 ? 4 : innerWidth >= 2000 ? 3 : innerWidth >= 1100 ? 2 : 1;
+}
+function pvArrangeColumns(grid) {
+  const count = pvColumnCount();
+  if (grid.dataset.columns === String(count)) return;
+  const photos = Array.from(grid.querySelectorAll('.pv-img-wrap')).sort((a,b) => Number(a.dataset.index)-Number(b.dataset.index));
+  const columns = Array.from({length:count}, () => {
+    const column = document.createElement('div'); column.className = 'pv-column'; return column;
+  });
+  photos.forEach((photo,index) => columns[index % count].appendChild(photo));
+  grid.replaceChildren(...columns);
+  grid.dataset.columns = count;
+}
+function pvImageReady(img) {
+  return new Promise(resolve => {
+    const done = () => {
+      img.removeEventListener('load', done); img.removeEventListener('error', done);
+      if (img.decode && img.naturalWidth) img.decode().catch(() => {}).then(resolve);
+      else resolve();
+    };
+    if (img.complete) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
   });
 }
-
+async function openLightbox(projId, idx) {
+  const project = PROJECTS.find(p => p.id === projId);
+  if (!project) return;
+  pvCancelPending();
+  const request = ++pvRequest;
+  pvPendingProject = null;
+  pvProj = project;
+  pvReady = false;
+  pvHoldEnd = false;
+  const scroll = document.getElementById('pvScroll');
+  const view = document.getElementById('photoview');
+  scroll.classList.add('pv-fading');
+  scroll.setAttribute('aria-busy', 'true');
+  view.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  pvStartWm();
+  if (scroll.dataset.projId !== String(projId)) {
+    const grid = document.createElement('div'); grid.className = 'pv-grid';
+    project.photos.forEach((src, i) => {
+      const wrap = document.createElement('div'); wrap.className = 'pv-img-wrap';
+      wrap.id = `pv-${i}`; wrap.dataset.index = i;
+      const img = document.createElement('img');
+      img.alt = ''; img.loading = i < 6 || i === idx ? 'eager' : 'lazy'; img.decoding = 'async';
+      img.addEventListener('load', () => {
+        if (scroll.dataset.projId !== String(projId) || !scroll.contains(img)) return;
+        if (img.naturalWidth && img.naturalHeight) wrap.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+        if (pvHoldEnd) scroll.scrollTop = scroll.scrollHeight;
+      });
+      img.src = src;
+      if (img.complete && img.naturalWidth) wrap.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+      const shield = document.createElement('div'); shield.className = 'pv-img-shield';
+      wrap.append(img,shield); grid.appendChild(wrap);
+    });
+    pvArrangeColumns(grid);
+    scroll.replaceChildren(grid); scroll.dataset.projId = projId;
+  } else { pvArrangeColumns(scroll.firstElementChild); }
+  // Reset under the fade, before a frame can reveal the new project at the old position.
+  scroll.scrollTo({top:0, behavior:'instant'});
+  document.getElementById('pvMeta').textContent = `${project.name}  ·  ${project.photos.length} Photos`;
+  pvUpdateNavPreviews();
+  const imgs = Array.from(scroll.querySelectorAll('img')).filter(img => img.loading === 'eager');
+  await Promise.all(imgs.map(pvImageReady));
+  if (!pvIsCurrent(request)) return;
+  if (idx > 0) document.getElementById(`pv-${idx}`)?.scrollIntoView({behavior:'instant',block:'start'});
+  else scroll.scrollTo({top:0,behavior:'instant'});
+  requestAnimationFrame(() => {
+    if (!pvIsCurrent(request)) return;
+    scroll.classList.remove('pv-fading'); scroll.setAttribute('aria-busy', 'false'); pvReady = true;
+    pvUserScrollTimer = setTimeout(() => { if (pvIsCurrent(request)) pvStartAutoScroll(); }, pvReducedMotion() ? 0 : 300);
+  });
+}
 function closeLightbox() {
-  pvStopAutoScroll();
-  clearTimeout(pvUserScrollTimer);
-  clearTimeout(pvNextTimer);
+  ++pvRequest;
+  pvCancelPending(); pvReady = false; pvPendingProject = null; pvHoldEnd = false;
   document.getElementById('photoview').classList.remove('open');
-  document.body.classList.remove('pv-on');
-  pvStopWm();
+  document.getElementById('pvScroll').setAttribute('aria-busy', 'false');
+  document.body.classList.remove('pv-on'); pvStopWm();
   document.body.style.overflow = '';
 }
+window.addEventListener('resize', () => {
+  if (!document.getElementById('photoview').classList.contains('open')) return;
+  const scroll = document.getElementById('pvScroll'), grid = scroll.firstElementChild;
+  if (!grid || grid.dataset.columns === String(pvColumnCount())) return;
+  const top = scroll.getBoundingClientRect().top;
+  const anchor = Array.from(grid.querySelectorAll('.pv-img-wrap')).find(photo => photo.getBoundingClientRect().bottom > top);
+  pvArrangeColumns(grid);
+  anchor?.scrollIntoView({behavior:'instant',block:'start'});
+});
 
 // ─── 워터마크 roam (lightbox 열렸을 때만 동작) ───
 let pvWmRoamTimer = null;
@@ -1696,11 +1752,24 @@ document.getElementById('pvScroll').addEventListener('touchmove', pvPauseAndResu
 document.getElementById('pvNavPrev').addEventListener('click', pvPrevProject);
 document.getElementById('pvNavNext').addEventListener('click', pvNextProject);
 
-// 키보드 ← → 로 프로젝트 전환
+// Page keys move three view heights. Home/End work on the visible photo surface.
 document.addEventListener('keydown', function(e) {
-  if (!document.getElementById('photoview').classList.contains('open')) return;
-  if (e.key === 'ArrowLeft')  pvPrevProject();
-  if (e.key === 'ArrowRight') pvNextProject();
+  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey ||
+      e.target.closest?.('input,textarea,select,[contenteditable="true"]') ||
+      document.getElementById('cmodal')?.classList.contains('open')) return;
+  const open = document.getElementById('photoview').classList.contains('open');
+  if (open && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    e.preventDefault(); pvAdjacentProject(e.key === 'ArrowRight' ? 1 : -1); return;
+  }
+  if (!['PageUp','PageDown','Home','End'].includes(e.key)) return;
+  if (!open && e.target.closest?.('#filterWrap')) return;
+  e.preventDefault();
+  const scroll = open ? document.getElementById('pvScroll') : document.scrollingElement;
+  if (open) { pvPauseAndResume(); if (e.key === 'End') { pvHoldEnd = true; clearTimeout(pvUserScrollTimer); } }
+  const max = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
+  const target = e.key === 'Home' ? 0 : e.key === 'End' ? max : scroll.scrollTop + (e.key === 'PageDown' ? 1 : -1) * scroll.clientHeight * 3;
+  // Boundary keys settle immediately; End remains at the last photo as lazy images finish.
+  scroll.scrollTo({top:Math.max(0,Math.min(max,target)),behavior:pvReducedMotion() || e.key === 'Home' || e.key === 'End' ? 'instant' : 'smooth'});
 });
 
 /* ── 사이드 스크러버 ── */
