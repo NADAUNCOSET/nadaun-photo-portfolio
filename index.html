@@ -713,6 +713,10 @@
       cursor: default;
     }
 
+    @media (hover: hover) and (pointer: fine) {
+      #pvScroll.pv-cursor-hidden, #pvScroll.pv-cursor-hidden .pv-img-shield { cursor: none; }
+    }
+
     /* ─── FOOTER ─── */
     footer {
       border-top: .5px solid rgba(255,255,255,.06);
@@ -847,6 +851,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&display=swap">
 
 <script src="/category-navigation.js?v=20260910-touch" defer></script>
+<script src="/viewer-cursor.js?v=20260910" defer></script>
 <link rel="stylesheet" href="/photo-viewer-mobile.css?v=20260910-controls">
 </head>
 <body>
