@@ -846,6 +846,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&display=swap">
 
 <script src="/category-navigation.js?v=20260910-touch" defer></script>
+<link rel="stylesheet" href="/photo-viewer-mobile.css?v=20260910-controls">
 </head>
 <body>
 
@@ -899,6 +900,7 @@
     </div>
   </div>
   <!-- 이전/다음 프로젝트 네비게이션 -->
+  <div class="pv-project-controls">
   <button class="pv-nav pv-nav-prev" id="pvNavPrev" aria-label="이전 프로젝트">
     <div class="pv-nav-arrow">&#8592;</div>
     <div class="pv-nav-preview">
@@ -909,6 +911,7 @@
       </div>
     </div>
   </button>
+  <span class="pv-project-index" id="pvProjectIndex" aria-hidden="true"></span>
   <button class="pv-nav pv-nav-next" id="pvNavNext" aria-label="다음 프로젝트">
     <div class="pv-nav-preview">
       <img class="pv-nav-thumb" id="pvNavNextThumb" src="" alt="">
@@ -919,6 +922,7 @@
     </div>
     <div class="pv-nav-arrow">&#8594;</div>
   </button>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -1564,6 +1568,7 @@ function pvPrevProject() {
 function pvUpdateNavPreviews() {
   const visible = getFilteredProjects();
   const curIdx = visible.findIndex(p => p.id === pvProj.id);
+  document.getElementById('pvProjectIndex').textContent = `${String(curIdx + 1).padStart(2, '0')} / ${visible.length}`;
   const prev = visible[(curIdx - 1 + visible.length) % visible.length];
   const next = visible[(curIdx + 1) % visible.length];
   if (prev) {

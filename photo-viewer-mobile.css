@@ -1,0 +1,72 @@
+/* Desktop keeps the existing side navigation and photo presentation. */
+.pv-project-controls { display:contents; }
+.pv-project-index { display:none; }
+
+@media (max-width:768px) {
+  #photoview {
+    --pv-mobile-bg:#1a1a1a;
+    --pv-mobile-text:#F5F4F0;
+    --pv-mobile-top:calc(52px + env(safe-area-inset-top, 0px));
+    --pv-mobile-bottom:calc(56px + env(safe-area-inset-bottom, 0px));
+    background:var(--pv-mobile-bg);
+  }
+  #photoview .pv-header {
+    position:absolute; height:var(--pv-mobile-top);
+    padding:env(safe-area-inset-top, 0px) 12px 0 16px;
+    gap:12px; background:var(--pv-mobile-bg); box-sizing:border-box;
+  }
+  #photoview .pv-meta {
+    min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-family:var(--font-display); font-size:12px; font-weight:500;
+    letter-spacing:0; color:var(--pv-mobile-text);
+  }
+  #photoview .pv-close {
+    flex-shrink:0; width:44px; height:44px; color:var(--pv-mobile-text);
+    background:none; border:0; transform:none;
+  }
+  #photoview .pv-scroll {
+    inset:var(--pv-mobile-top) 0 var(--pv-mobile-bottom);
+    padding:0; touch-action:pan-y pinch-zoom;
+    overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch;
+  }
+  #photoview .pv-scrubber { display:none; }
+  #photoview .pv-project-controls {
+    position:absolute; inset:auto 0 0; height:var(--pv-mobile-bottom);
+    box-sizing:border-box; z-index:620;
+    display:grid; grid-template-columns:44px minmax(0,1fr) 44px;
+    align-items:center; gap:16px;
+    padding:0 16px env(safe-area-inset-bottom, 0px);
+    background:var(--pv-mobile-bg);
+  }
+  #photoview .pv-nav {
+    position:static; width:44px; height:44px; min-height:44px;
+    display:grid; place-items:center; transform:none;
+    padding:0; margin:0; background:none; border:0;
+    color:var(--pv-mobile-text); touch-action:manipulation;
+  }
+  #photoview .pv-nav-arrow {
+    width:44px; min-height:44px; height:44px;
+    border:0; border-radius:0; background:none; backdrop-filter:none;
+    color:inherit; font-size:24px; font-weight:400;
+    transition:opacity .2s ease;
+  }
+  #photoview .pv-nav:active .pv-nav-arrow { opacity:.55; }
+  #photoview .pv-nav:focus-visible,#photoview .pv-close:focus-visible {
+    outline:1px solid var(--pv-mobile-text); outline-offset:-4px;
+  }
+  #photoview .pv-nav-preview { display:none; }
+  #photoview .pv-project-index {
+    display:block; text-align:center; font-size:12px; font-weight:400;
+    font-family:var(--font-display); font-variant-numeric:tabular-nums;
+    letter-spacing:0; color:rgba(245,244,240,.58);
+  }
+  .pv-wm-tr { top:calc(60px + env(safe-area-inset-top, 0px)); }
+  .pv-wm-br,.pv-wm-bl { bottom:calc(68px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width:768px) and (max-height:500px) {
+  #photoview {
+    --pv-mobile-top:calc(44px + env(safe-area-inset-top, 0px));
+    --pv-mobile-bottom:calc(44px + env(safe-area-inset-bottom, 0px));
+  }
+}
