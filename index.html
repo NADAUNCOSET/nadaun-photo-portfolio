@@ -20,7 +20,9 @@
       const stored = sessionStorage.getItem('photo_ver');
       if (stored && stored !== VERSION) {
         sessionStorage.setItem('photo_ver', VERSION);
-        location.replace(location.pathname + '?v=' + Date.now());
+        const refreshUrl = new URL(location.href);
+        refreshUrl.searchParams.set('v', Date.now());
+        location.replace(refreshUrl.toString());
       } else {
         sessionStorage.setItem('photo_ver', VERSION);
       }
@@ -853,6 +855,8 @@
 <script src="/category-navigation.js?v=20260910-touch" defer></script>
 <script src="/viewer-cursor.js?v=20260910" defer></script>
 <link rel="stylesheet" href="/photo-viewer-mobile.css?v=20260910-controls">
+<link rel="stylesheet" href="/photo-share.css?v=20260915">
+<script src="/photo-share.js?v=20260915" defer></script>
 </head>
 <body>
 
@@ -888,7 +892,10 @@
       <div class="gallery-proj-name" id="galName">—</div>
       <div class="gallery-proj-sub" id="galSub">—</div>
     </div>
-    <button class="gallery-close" id="galClose" aria-label="갤러리 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    <div class="photo-header-actions">
+      <button class="photo-share-button" id="galShare" type="button" aria-label="포트폴리오 링크 복사" title="포트폴리오 링크 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-4 4 4-4 4 4M7 11H5v10h14V11h-2"/></svg></button>
+      <button class="gallery-close" id="galClose" aria-label="갤러리 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
   </div>
   <div class="gallery-grid" id="galGrid"></div>
 </div>
@@ -897,7 +904,10 @@
 <div id="photoview">
   <div class="pv-header">
     <span class="pv-meta" id="pvMeta"></span>
-    <button class="pv-close" id="pvClose" aria-label="사진 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    <div class="photo-header-actions">
+      <button class="photo-share-button" id="pvShare" type="button" aria-label="포트폴리오 링크 복사" title="포트폴리오 링크 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-4 4 4-4 4 4M7 11H5v10h14V11h-2"/></svg></button>
+      <button class="pv-close" id="pvClose" aria-label="사진 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
   </div>
   <div class="pv-scroll" id="pvScroll"></div>
   <div class="pv-scrubber" id="pvScrubber">
@@ -932,6 +942,7 @@
 </div>
 
 <!-- FOOTER -->
+<div class="photo-share-toast" id="photoShareToast" role="status" aria-live="polite"></div>
 <footer>
   <div class="footer-row">
     <a href="/" class="footer-logo">
@@ -1528,6 +1539,7 @@ function openGallery(id){
   });
 
   document.getElementById('gallery').classList.add('open');
+  window.PhotoShare?.setProject(activeProj);
   document.body.style.overflow='hidden';
 
   /* magnetic zoom effect — mouse proximity */
@@ -1536,6 +1548,7 @@ function openGallery(id){
 
 function closeGallery(){
   document.getElementById('gallery').classList.remove('open');
+  window.PhotoShare?.clearProject();
   document.body.style.overflow='';
 }
 document.getElementById('galClose').addEventListener('click',closeGallery);
@@ -1676,6 +1689,7 @@ async function openLightbox(projId, idx) {
   scroll.classList.add('pv-fading');
   scroll.setAttribute('aria-busy', 'true');
   view.classList.add('open');
+  window.PhotoShare?.setProject(project);
   document.body.style.overflow = 'hidden';
   pvStartWm();
   if (scroll.dataset.projId !== String(projId)) {
@@ -1717,6 +1731,7 @@ function closeLightbox() {
   ++pvRequest;
   pvCancelPending(); pvReady = false; pvPendingProject = null; pvHoldEnd = false;
   document.getElementById('photoview').classList.remove('open');
+  window.PhotoShare?.clearProject();
   document.getElementById('pvScroll').setAttribute('aria-busy', 'false');
   document.body.classList.remove('pv-on'); pvStopWm();
   document.body.style.overflow = '';
