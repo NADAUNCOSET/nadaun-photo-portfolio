@@ -1,0 +1,63 @@
+/* Match the video player's quiet share icon, with a full touch target. */
+.photo-header-actions {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-shrink:0;
+}
+.pv-meta,.gallery-meta { min-width:0; }
+.pv-meta { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pv-header,.gallery-header { gap:12px; }
+.photo-share-button {
+  --share-text:#F5F4F0;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  flex-shrink:0;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  color:var(--share-text);
+  background:transparent;
+  cursor:pointer;
+  touch-action:manipulation;
+  transition:background .2s ease,opacity .2s ease;
+}
+.photo-share-button svg {
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.photo-share-button:hover { background:rgba(245,244,240,.1); }
+.photo-share-button:active { opacity:.6; }
+.photo-share-button:focus-visible { outline:1px solid currentColor; outline-offset:-4px; }
+.photo-share-toast {
+  position:fixed;
+  top:calc(64px + env(safe-area-inset-top,0px));
+  right:16px;
+  z-index:700;
+  max-width:calc(100vw - 32px);
+  box-sizing:border-box;
+  padding:10px 14px;
+  border:1px solid rgba(245,244,240,.12);
+  border-radius:6px;
+  color:var(--off-white,#F5F4F0);
+  background:var(--black,#1a1a1a);
+  font-family:var(--font-body,inherit);
+  font-size:12px;
+  letter-spacing:0;
+  line-height:1.5;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:opacity .2s ease,transform .2s ease;
+  pointer-events:none;
+}
+.photo-share-toast.visible { opacity:1; transform:translateY(0); }
+@media(max-width:768px) {
+  .photo-share-button svg { width:20px; height:20px; }
+}
