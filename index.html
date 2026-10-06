@@ -1627,10 +1627,17 @@ function pvStartAutoScroll() {
   if (!pvReady || !pvIsCurrent(request) || pvHoldEnd) return;
   function step() {
     if (!pvReady || !pvIsCurrent(request) || pvHoldEnd) return;
-    const maxScroll = scroll.scrollHeight - scroll.clientHeight;
-    if (maxScroll > 50 && scroll.scrollTop >= maxScroll - 2) {
+    const maxScroll = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
+    if (scroll.scrollTop >= maxScroll - 2) {
       pvStopAutoScroll();
-      pvNextTimer = setTimeout(() => { if (pvIsCurrent(request) && pvReady) pvNextProject(); }, 1200);
+      // Short sets need viewing time even when there is nothing to scroll.
+      pvNextTimer = setTimeout(() => {
+        if (!pvIsCurrent(request) || !pvReady || pvHoldEnd) return;
+        // A resize or late image can extend the page while the timer is pending.
+        const remaining = scroll.scrollHeight - scroll.clientHeight - scroll.scrollTop;
+        if (remaining > 2) pvStartAutoScroll();
+        else pvNextProject();
+      }, maxScroll <= 50 ? 4000 : 1200);
       return;
     }
     scroll.scrollTop += PV_SPEED;
