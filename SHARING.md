@@ -9,7 +9,7 @@ The copied URL opens that category immediately, without showing the ALL grid fir
 - ALL: `https://photo.nadaun.co/`
 - Category: `https://photo.nadaun.co/portrait` (no query string or tracking parameters).
 - Selecting categories updates browser history; back/forward restores the category and grid.
-- Vercel rewrites the explicit category paths to `index.html`; `trailingSlash: false` keeps relative image paths at `/images/`.
+- Vercel serves the original page through `api/share.js` for category paths, with matching server-rendered preview metadata. Category paths with a trailing slash redirect to the clean path, preserving a valid project ID and keeping relative image paths at `/images/`.
 - Existing category order, project data, curated photo ordering and transition effects are preserved.
 
 | Category | Path |
@@ -53,3 +53,22 @@ ALL reset, direct project links, project ID 0, next-project sharing, close/reloa
 cache refresh, clipboard failure fallbacks, invalid project IDs, route responses and assets.
 The 2026-10-14 backup includes `verify-sharing.cjs` and `logic-verification.json` for the
 24 Node VM checks against the real source. This is logic verification, not visual browser QA.
+
+## Link preview images (2026-10-14)
+
+KakaoTalk and other link scrapers receive the matching Open Graph/Twitter title, image,
+description and canonical URL directly in the HTML response, without running JavaScript.
+Category previews use a stable cover from that category in the deployed PROJECTS order.
+Project links, including the existing `/?project=0` form, use that project's cover.
+
+- `_lib/share-preview.cjs` reads only the deployed `index.html` source. The photo sync remains the single source for projects and covers; there is no duplicated catalog or generated-page folder.
+- `api/share.js` changes the head metadata and image preload only. The original viewer/grid scripts and body are unchanged.
+- Explicit Vercel `routes` run sharing before the static filesystem. This is required so existing `/?project=<id>` links do not get the generic static `index.html` metadata.
+- `/share-image/<id>.webp?v=<cover-version>` returns the existing public cover bytes with the correct `image/webp` response type. Only known project IDs are accepted; no caller-supplied image URL is fetched. Media originals are not edited or copied.
+- Cover paths are encoded segment by segment, including Korean, spaces and ampersands. The image version changes when its source path changes. False fixed image dimensions are removed.
+- Metadata has a five-minute CDN cache. Images use a one-day CDN cache and one-hour browser cache. No disk cache is created.
+- Messaging apps also maintain their own preview cache. Previously shared URLs may need a cache refresh in [Kakao's OG tools](https://developers.kakao.com/tool); changing our HTML cannot rewrite already-sent messages.
+
+Verification source: `backups/2026-10-14_173739_share-preview/verify-preview.cjs`.
+It covers all 14 categories and 346 project mappings, unchanged page body, project ID 0,
+invalid IDs, HTML escaping, HEAD requests, allowed image sources and MIME/error handling.

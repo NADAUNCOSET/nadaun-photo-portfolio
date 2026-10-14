@@ -32,7 +32,9 @@ _archive/
 # ─── 사이트별 (대용량 이미지 — Cloudflare R2로 이관 예정) ───
 images/
 스크린샷/
-api/
+api/*
+!api/share.js
+!api/share-image.js
 *.jpg
 *.JPG
 *.jpeg

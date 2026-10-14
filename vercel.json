@@ -1,21 +1,23 @@
 {
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/images/:path*", "destination": "https://media.nadaun.co/photo/:path*" },
-    { "source": "/:category(editorial|corporate|collaboration|concert-festival|external-event|poster|lookbook|magazine|portrait|actor-profile|business-profile|company-profile|couple|family)", "destination": "/index.html" }
-  ],
-  "headers": [
+  "functions": {
+    "api/share.js": { "includeFiles": "index.html" },
+    "api/share-image.js": { "includeFiles": "index.html" }
+  },
+  "routes": [
+    { "src": "/", "has": [{ "type": "query", "key": "project" }], "dest": "/api/share" },
+    { "src": "/share-image/(?<project>\\d+)\\.webp", "dest": "/api/share-image?project=$project" },
+    { "src": "/(?<category>editorial|corporate|collaboration|concert-festival|external-event|poster|lookbook|magazine|portrait|actor-profile|business-profile|company-profile|couple|family)/", "dest": "/api/share?category=$category&_canonical=1" },
+    { "src": "/(?<category>editorial|corporate|collaboration|concert-festival|external-event|poster|lookbook|magazine|portrait|actor-profile|business-profile|company-profile|couple|family)", "dest": "/api/share?category=$category" },
     {
-      "source": "/images/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "src": "/images/(.*)",
+      "dest": "https://media.nadaun.co/photo/$1",
+      "headers": { "Cache-Control": "public, max-age=31536000, immutable" }
     },
     {
-      "source": "/(.*)\\.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
-      ]
-    }
+      "src": "/(.*)\\.html",
+      "headers": { "Cache-Control": "public, max-age=0, must-revalidate" },
+      "continue": true
+    },
+    { "handle": "filesystem" }
   ]
 }
