@@ -38,7 +38,7 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
 
-function renderPreview(slug = '', id) {
+function renderPreview(slug = '', id, revision) {
   if (slug && !categories.has(slug)) return null;
   const category = categories.get(slug);
   const project = projectById(id);
@@ -46,6 +46,7 @@ function renderPreview(slug = '', id) {
   if (!representative) return null;
   const url = new URL('/' + slug, SITE);
   if (project) url.searchParams.set('project', String(project.id));
+  if (revision === '2') url.searchParams.set('s', revision);
   const title = project ? `${project.name} · ${project.category} | 나다운` : category ? `${category} | 나다운 포토그래피` : '나다운 포토그래피';
   const description = project ? `${project.name} — 나다운 ${project.category} 촬영 포트폴리오.` : category ? `나다운의 ${category} 촬영 포트폴리오를 만나보세요.` : '나다운 사진 포트폴리오를 만나보세요.';
   const image = imageUrl(representative);

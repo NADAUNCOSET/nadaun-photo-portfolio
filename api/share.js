@@ -5,7 +5,7 @@ export function GET(request) {
   // Vercel rewrites supply the category while retaining the public project's query.
   const slug = url.searchParams.get('category') || '';
   try {
-    const page = preview.renderPreview(slug, url.searchParams.get('project'));
+    const page = preview.renderPreview(slug, url.searchParams.get('project'), url.searchParams.get('s'));
     if (!page) return new Response('Not found', {status:404});
     if (url.searchParams.get('_canonical') === '1') {
       const canonical = new URL(page.url);

@@ -53,6 +53,10 @@
   }
 
   async function copyLink(url, message) {
+    // A stable share revision avoids previews cached before category OG support.
+    const shared = new URL(url);
+    shared.searchParams.set('s', '2');
+    url = shared.toString();
     try {
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(url);

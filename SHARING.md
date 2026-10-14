@@ -7,7 +7,8 @@ It uses the same icon and 44px touch target as the individual photo viewer.
 The copied URL opens that category immediately, without showing the ALL grid first.
 
 - ALL: `https://photo.nadaun.co/`
-- Category: `https://photo.nadaun.co/portrait` (no query string or tracking parameters).
+- Category address: `https://photo.nadaun.co/portrait`.
+- The copy button adds the short, stable preview revision `?s=2` (project links append `&s=2`). This avoids reusing previews cached before category metadata was deployed; it is not tracking. The server preserves this revision in `og:url` so scrapers do not return to the old cached URL. Clean addresses remain supported.
 - Selecting categories updates browser history; back/forward restores the category and grid.
 - Vercel serves the original page through `api/share.js` for category paths, with matching server-rendered preview metadata. Category paths with a trailing slash redirect to the clean path, preserving a valid project ID and keeping relative image paths at `/images/`.
 - Existing category order, project data, curated photo ordering and transition effects are preserved.

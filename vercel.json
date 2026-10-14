@@ -4,6 +4,7 @@
     "api/share-image.js": { "includeFiles": "index.html" }
   },
   "routes": [
+    { "src": "/", "has": [{ "type": "query", "key": "s", "value": "2" }], "dest": "/api/share" },
     { "src": "/", "has": [{ "type": "query", "key": "project" }], "dest": "/api/share" },
     { "src": "/share-image/(?<project>\\d+)\\.webp", "dest": "/api/share-image?project=$project" },
     { "src": "/(?<category>editorial|corporate|collaboration|concert-festival|external-event|poster|lookbook|magazine|portrait|actor-profile|business-profile|company-profile|couple|family)/", "dest": "/api/share?category=$category&_canonical=1" },
