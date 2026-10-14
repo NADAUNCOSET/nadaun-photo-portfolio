@@ -1,6 +1,7 @@
 /* Project links use the persistent PROJECTS id, never a shuffled card position. */
 (() => {
   const toast = document.getElementById('photoShareToast');
+  const categoryShare = document.getElementById('categoryShare');
   let toastTimer;
 
   function notify(message) {
@@ -11,7 +12,7 @@
   }
 
   function projectUrl(project) {
-    const url = new URL(location.origin + location.pathname);
+    const url = photoCategoryUrl();
     url.searchParams.set('project', String(project.id));
     return url;
   }
@@ -51,9 +52,7 @@
     return copied;
   }
 
-  async function copyProject(project) {
-    if (!project) return;
-    const url = projectUrl(project).toString();
+  async function copyLink(url, message) {
     try {
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(url);
@@ -63,7 +62,18 @@
         return;
       }
     }
-    notify('포트폴리오 링크 복사됨');
+    notify(message);
+  }
+
+  function copyProject(project) {
+    if (!project) return;
+    return copyLink(projectUrl(project).toString(), '포트폴리오 링크 복사됨');
+  }
+
+  function updateCategory() {
+    const label = activeMain === 'all' ? '전체 사진' : activeMain;
+    categoryShare.setAttribute('aria-label', label + ' 링크 복사');
+    categoryShare.title = label + ' 링크 복사';
   }
 
   function openSharedProject() {
@@ -78,14 +88,24 @@
     openLightbox(project.id, 0);
   }
 
-  window.PhotoShare = {setProject, clearProject};
+  window.PhotoShare = {setProject, clearProject, updateCategory};
+  updateCategory();
+  categoryShare.addEventListener('click', () => copyLink(
+    photoCategoryUrl().toString(),
+    activeMain === 'all' ? '전체 사진 링크 복사됨' : activeMain + ' 링크 복사됨'
+  ));
+  addHover(categoryShare);
   document.getElementById('pvShare').addEventListener('click', () => copyProject(pvProj));
   document.getElementById('galShare').addEventListener('click', () => copyProject(activeProj));
   addHover(document.getElementById('pvShare'));
   addHover(document.getElementById('galShare'));
   window.addEventListener('popstate', () => {
+    selectPhotoCategory(photoCategoryFromUrl(), {animate:false, updateUrl:false});
     if (new URLSearchParams(location.search).has('project')) openSharedProject();
-    else if (document.getElementById('photoview').classList.contains('open')) closeLightbox();
+    else {
+      if (document.getElementById('photoview').classList.contains('open')) closeLightbox();
+      if (document.getElementById('gallery').classList.contains('open')) closeGallery();
+    }
   });
   // Defer until all viewer and watermark elements have been parsed.
   if (document.readyState === 'loading') {

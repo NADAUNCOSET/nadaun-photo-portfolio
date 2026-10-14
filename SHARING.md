@@ -1,17 +1,55 @@
 # Photo portfolio sharing
 
+## Category links
+
+Select a category, then use the small share icon at the top right beside Contact.
+It uses the same icon and 44px touch target as the individual photo viewer.
+The copied URL opens that category immediately, without showing the ALL grid first.
+
+- ALL: `https://photo.nadaun.co/`
+- Category: `https://photo.nadaun.co/portrait` (no query string or tracking parameters).
+- Selecting categories updates browser history; back/forward restores the category and grid.
+- Vercel rewrites the explicit category paths to `index.html`; `trailingSlash: false` keeps relative image paths at `/images/`.
+- Existing category order, project data, curated photo ordering and transition effects are preserved.
+
+| Category | Path |
+| --- | --- |
+| Editorial | `/editorial` |
+| Corporate | `/corporate` |
+| Collaboration | `/collaboration` |
+| Concert & Festival | `/concert-festival` |
+| External Event | `/external-event` |
+| Poster | `/poster` |
+| Lookbook | `/lookbook` |
+| Magazine | `/magazine` |
+| Portrait | `/portrait` |
+| Actor Profile | `/actor-profile` |
+| Business Profile | `/business-profile` |
+| COMPANY PROFILE | `/company-profile` |
+| Couple | `/couple` |
+| Family | `/family` |
+
+When adding a category, add its stable slug to `PHOTO_CATEGORY_SLUGS` in `index.html`
+and the explicit route in `vercel.json`. Do not derive shared URLs from a display index.
+
+## Individual project links
+
 The share icon beside the close button copies a link to the current photo project.
 Opening that link displays the project's photo viewer directly, including on mobile.
 
-- URL: `https://photo.nadaun.co/?project=<id>`.
+- Existing URL: `https://photo.nadaun.co/?project=<id>` remains supported.
+- Sharing within a category keeps its context, e.g. `https://photo.nadaun.co/portrait?project=1409`.
 - Use the persistent `PROJECTS.id`; never use shuffled display position or array index.
 - Moving to another project updates the URL and the copied link. Closing clears the project parameter.
 - Clipboard API failures fall back to browser copy, then a manual link prompt. Success feedback appears only after a successful copy.
 - The cache refresh must preserve the `project` parameter.
 - Keep the share icon next to close, with a 44px touch target. Preserve the existing grid, viewer controls, category navigation and motion.
 
-Implementation: `photo-share.js`, `photo-share.css`, and the viewer hooks in `index.html`.
+Implementation: `photo-share.js`, `photo-share.css`, `vercel.json`, and the category/viewer hooks in `index.html`.
 The photo sync updates the `PROJECTS` data block; it must preserve these hooks and asset references.
 
-Validation: direct project links, project ID 0, next-project sharing, close/reload,
-cache refresh, clipboard failure fallbacks, invalid project IDs, and desktop/mobile widths.
+Validation: all 14 category links and first-render filtering, browser back/forward,
+ALL reset, direct project links, project ID 0, next-project sharing, close/reload,
+cache refresh, clipboard failure fallbacks, invalid project IDs, route responses and assets.
+The 2026-10-14 backup includes `verify-sharing.cjs` and `logic-verification.json` for the
+24 Node VM checks against the real source. This is logic verification, not visual browser QA.

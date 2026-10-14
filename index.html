@@ -855,8 +855,8 @@
 <script src="/category-navigation.js?v=20260910-touch" defer></script>
 <script src="/viewer-cursor.js?v=20260910" defer></script>
 <link rel="stylesheet" href="/photo-viewer-mobile.css?v=20260910-controls">
-<link rel="stylesheet" href="/photo-share.css?v=20260915">
-<script src="/photo-share.js?v=20260915" defer></script>
+<link rel="stylesheet" href="/photo-share.css?v=20261014-category">
+<script src="/photo-share.js?v=20261014-category" defer></script>
 <style>
 .nadaun-family{margin:0;padding:32px max(20px,4vw);color:inherit;font-family:Pretendard,Arial,sans-serif;letter-spacing:0;}
 .nadaun-family p{font-size:11px;font-weight:600;line-height:1.5;opacity:.65;margin:0 0 12px;letter-spacing:0;}
@@ -878,6 +878,7 @@
   <nav>
     <a href="#">Projects</a>
     <a href="#" class="nav-contact" onclick="openContact(event)">Contact</a>
+    <button class="photo-share-button" id="categoryShare" type="button" aria-label="전체 사진 링크 복사" title="전체 사진 링크 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-4 4 4-4 4 4M7 11H5v10h14V11h-2"/></svg></button>
   </nav>
 </header>
 
@@ -1444,8 +1445,40 @@ const PHOTO_CATEGORY_ORDER = [
   'Poster', 'Lookbook', 'Magazine', 'Portrait', 'Actor Profile', 'Business Profile',
   'COMPANY PROFILE', 'Couple', 'Family',
 ];
-let activeMain = 'all';
+const PHOTO_CATEGORY_SLUGS = {
+  'Editorial':'editorial', 'Corporate':'corporate', 'Collaboration':'collaboration',
+  'Concert & Festival':'concert-festival', 'External Event':'external-event',
+  'Poster':'poster', 'Lookbook':'lookbook', 'Magazine':'magazine', 'Portrait':'portrait',
+  'Actor Profile':'actor-profile', 'Business Profile':'business-profile',
+  'COMPANY PROFILE':'company-profile', 'Couple':'couple', 'Family':'family',
+};
+function photoCategoryFromUrl(){
+  const slug=location.pathname.replace(/^\/|\/$/g,'');
+  const requested=Object.keys(PHOTO_CATEGORY_SLUGS).find(category=>PHOTO_CATEGORY_SLUGS[category]===slug);
+  return requested && PROJECTS.some(project=>project.category===requested) ? requested : 'all';
+}
+function photoCategoryUrl(category=activeMain){
+  return new URL('/'+(PHOTO_CATEGORY_SLUGS[category] || ''),location.origin);
+}
+// Select before the first render so a shared category never flashes the ALL grid.
+let activeMain = photoCategoryFromUrl();
 const filterWrap = document.getElementById('filterWrap');
+function selectPhotoCategory(category,{animate=true,updateUrl=true}={}){
+  activeMain=category;
+  filterWrap.querySelectorAll('.filter-btn').forEach(button=>{
+    const selected=button.dataset.category===category;
+    button.classList.toggle('active',selected);
+    button.setAttribute('aria-pressed',String(selected));
+  });
+  if(updateUrl){
+    const url=photoCategoryUrl();
+    if(url.href!==location.href) history.pushState(history.state,'',url);
+  }
+  window.PhotoShare?.updateCategory();
+  const render=()=>{buildGrid(false);window.scrollTo({top:0,behavior:'instant'});};
+  if(animate) dissolveGallery(pGrid,render);
+  else {cancelGalleryMotion();render();}
+}
 function buildFilters(){
   const menuScrollTop=filterWrap.scrollTop;
   const restoreMenuFocus=filterWrap.contains(document.activeElement);
@@ -1457,20 +1490,17 @@ function buildFilters(){
     const btn=document.createElement('button'); btn.type='button';
     btn.className='filter-btn'+(category===activeMain?' active':'');
     btn.textContent=category==='all'?'ALL':category;
+    btn.dataset.category=category;
     btn.dataset.label=btn.textContent; btn.setAttribute('aria-label',btn.textContent);
     btn.setAttribute('aria-pressed',String(category===activeMain));
-    btn.addEventListener('click',()=>{
-      activeMain=category;
-      filterWrap.querySelectorAll('.filter-btn').forEach(button=>{
-        const selected=button===btn;
-        button.classList.toggle('active',selected);
-        button.setAttribute('aria-pressed',String(selected));
-      });
-      dissolveGallery(pGrid,()=>{buildGrid(false);window.scrollTo({top:0,behavior:'instant'});});
-    });
+    btn.addEventListener('click',()=>selectPhotoCategory(category));
     filterWrap.appendChild(btn);
   });
   filterWrap.scrollTop=menuScrollTop;
+  if(activeMain!=='all'){
+    const selected=filterWrap.querySelector('[aria-pressed="true"]');
+    if(selected) filterWrap.scrollTop=selected.offsetTop-(filterWrap.clientHeight-selected.offsetHeight)/2;
+  }
   if(restoreMenuFocus) filterWrap.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
 }
 

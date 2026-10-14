@@ -36,6 +36,13 @@
 .photo-share-button:hover { background:rgba(245,244,240,.1); }
 .photo-share-button:active { opacity:.6; }
 .photo-share-button:focus-visible { outline:1px solid currentColor; outline-offset:-4px; }
+/* The category action uses the same icon and touch target as the photo viewer. */
+#hdr nav { gap:20px; }
+#hdr #categoryShare { margin-left:-8px; margin-right:-10px; }
+@media(max-width:768px) {
+  #hdr nav { gap:16px; }
+  #hdr #categoryShare { margin-left:-6px; margin-right:-10px; }
+}
 .photo-share-toast {
   position:fixed;
   top:calc(64px + env(safe-area-inset-top,0px));

@@ -1,6 +1,8 @@
 {
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/images/:path*", "destination": "https://media.nadaun.co/photo/:path*" }
+    { "source": "/images/:path*", "destination": "https://media.nadaun.co/photo/:path*" },
+    { "source": "/:category(editorial|corporate|collaboration|concert-festival|external-event|poster|lookbook|magazine|portrait|actor-profile|business-profile|company-profile|couple|family)", "destination": "/index.html" }
   ],
   "headers": [
     {
