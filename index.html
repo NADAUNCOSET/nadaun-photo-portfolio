@@ -60,37 +60,113 @@
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "NADAUN Photography",
-    "alternateName": "나다운",
-    "url": "https://photo.nadaun.co/",
-    "image": "https://media.nadaun.co/photo/portfolio/Concert%20%26%20Festival/pepsi-festa/00.webp",
-    "description": "기업행사, 브랜드 캠페인, 광고, 지면, 포스터, 룩북, 제품과 프로필 사진을 기획·촬영·제작하는 NADAUN 포토그래피 포트폴리오",
-    "areaServed": {
-      "@type": "Country",
-      "name": "South Korea"
-    },
-    "serviceType": ["기업행사 촬영", "브랜드 사진 제작", "광고사진 촬영", "지면광고 촬영", "포스터 촬영", "룩북 촬영", "제품사진 촬영", "프로필사진 촬영", "콘서트 촬영"],
-    "knowsAbout": ["Corporate Event Photography", "Brand Photography", "Advertising Photography", "Editorial Photography", "Poster Photography", "Lookbook Photography", "Product Photography", "Portrait Photography"],
-    "brand": {
-      "@type": "Brand",
-      "name": "NADAUN"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "촬영 서비스",
-      "itemListElement": [
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "기업행사 · 브랜드 캠페인 촬영"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "콘서트/공연 촬영"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "페스티벌 촬영"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "광고 · 지면 · 포스터 · 룩북 · 제품 촬영"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "프로필/인물 촬영"}}
-      ]
-    }
-  }
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "NADAUN Photography",
+  "alternateName": [
+    "나다운",
+    "나다운 포토그래피",
+    "NADAUN PHOTO"
+  ],
+  "url": "https://photo.nadaun.co/",
+  "image": "https://media.nadaun.co/photo/portfolio/Concert%20%26%20Festival/pepsi-festa/00.webp",
+  "description": "기업행사, 브랜드 캠페인, 광고, 지면, 포스터, 룩북, 제품과 프로필 사진을 기획·촬영·제작하는 NADAUN 포토그래피 포트폴리오",
+  "areaServed": {
+    "@type": "Country",
+    "name": "South Korea"
+  },
+  "serviceType": [
+    "기업행사 촬영",
+    "브랜드 사진 제작",
+    "광고사진 촬영",
+    "지면광고 촬영",
+    "포스터 촬영",
+    "룩북 촬영",
+    "제품사진 촬영",
+    "프로필사진 촬영",
+    "콘서트 촬영"
+  ],
+  "knowsAbout": [
+    "Corporate Event Photography",
+    "Brand Photography",
+    "Advertising Photography",
+    "Editorial Photography",
+    "Poster Photography",
+    "Lookbook Photography",
+    "Product Photography",
+    "Portrait Photography"
+  ],
+  "brand": {
+    "@type": "Brand",
+    "name": "NADAUN"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "나다운 포토그래피 서비스",
+    "url": "https://photo.nadaun.co/services-guide.html",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "기업과 행사",
+          "url": "https://photo.nadaun.co/corporate"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "공연과 페스티벌",
+          "url": "https://photo.nadaun.co/concert-festival"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "브랜드와 광고",
+          "url": "https://photo.nadaun.co/editorial"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "룩북과 제품",
+          "url": "https://photo.nadaun.co/lookbook"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "인물과 프로필",
+          "url": "https://photo.nadaun.co/portrait"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "사진·영상 통합 문의",
+          "url": "https://collective.nadaun.co/#contact"
+        }
+      }
+    ]
+  },
+  "@id": "https://photo.nadaun.co/#business",
+  "parentOrganization": {
+    "@type": "Organization",
+    "@id": "https://collective.nadaun.co/#organization",
+    "name": "나다운",
+    "url": "https://collective.nadaun.co/"
+  },
+  "telephone": "02-6053-6231",
+  "email": "info@nadaun.co"
+}
+</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -865,6 +941,7 @@
 .nadaun-family a:hover{text-decoration:underline;text-underline-offset:5px;}
 .nadaun-family a:focus-visible{outline:2px solid currentColor;outline-offset:4px;}
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://photo.nadaun.co/#website","url":"https://photo.nadaun.co/","name":"나다운 포토그래피","inLanguage":"ko-KR","publisher":{"@id":"https://photo.nadaun.co/#business"}},{"@type":"WebPage","@id":"https://photo.nadaun.co/#webpage","url":"https://photo.nadaun.co/","name":"나다운 포토그래피","isPartOf":{"@id":"https://photo.nadaun.co/#website"},"about":{"@id":"https://photo.nadaun.co/#business"},"relatedLink":["https://collective.nadaun.co/","https://shop.nadaun.co/","https://photo.nadaun.co/","https://video.nadaun.co/","https://photo.nadaun.co/services-guide.html","https://smartstore.naver.com/rainbowbene"]}]}</script>
 </head>
 <body>
 
@@ -963,7 +1040,7 @@
     </div>
   </div>
   <p class="footer-copy">© 2025 NADAUN. All rights reserved.</p>
-<nav class="nadaun-family" aria-label="나다운 서비스"><p>NADAUN NETWORK</p><div class="nadaun-family-links"><a href="https://collective.nadaun.co/">Collective ↗</a><a href="https://shop.nadaun.co/">Shop ↗</a><a href="https://nadaunspace.blogspot.com/">Space Journal ↗</a><a href="https://video.nadaun.co/">Video ↗</a><a href="https://wedding.nadaun.co/">Wedding ↗</a><a href="https://allinone.nadaun.co/">All in One ↗</a></div></nav>
+<nav class="nadaun-family" aria-label="나다운 서비스"><p>NADAUN NETWORK</p><div class="nadaun-family-links"><a href="/services-guide.html">서비스 분야별 안내</a><a href="https://smartstore.naver.com/rainbowbene">나다운 스페이스 스마트스토어 ↗</a><a href="https://collective.nadaun.co/">Collective ↗</a><a href="https://shop.nadaun.co/">Shop ↗</a><a href="https://nadaunspace.blogspot.com/">Space Journal ↗</a><a href="https://video.nadaun.co/">Video ↗</a><a href="https://wedding.nadaun.co/">Wedding ↗</a><a href="https://allinone.nadaun.co/">All in One ↗</a></div></nav>
 </footer>
 
 <script>
