@@ -18,14 +18,8 @@ Allow: /
 
 # AI collection is not permitted (owner decision 2026-09-10).
 User-agent: GPTBot
-User-agent: OAI-SearchBot
-User-agent: ChatGPT-User
-User-agent: PerplexityBot
-User-agent: Perplexity-User
 User-agent: ClaudeBot
 User-agent: Claude-Web
-User-agent: Claude-SearchBot
-User-agent: Claude-User
 User-agent: anthropic-ai
 User-agent: Google-Extended
 User-agent: CCBot
@@ -41,3 +35,22 @@ User-agent: YouBot
 Disallow: /
 
 Sitemap: https://photo.nadaun.co/sitemap.xml
+
+# Owner 2026-10-16: permit public search and citation.
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
