@@ -12,8 +12,10 @@ function assetRedirect(request){const p=new URL(request.url).pathname;if(htmlHan
 
 const mod=await import('./worker.mjs').catch(e=>{if(e.code==='ERR_MODULE_NOT_FOUND')return {default:{fetch:async()=>new Response('Not implemented',{status:501})}};throw e});
 const worker=mod.default,fixture=photo?null:JSON.parse(await readFile(path.join(root,'_content/video-manifest.json'),'utf8'));
-const request=(p,options={})=>new Request('https://'+kind+'.nadaun.co'+p,options);
-const env={RESEND_API_KEY:'unit-test-only',ASSETS:{async fetch(req){const redirect=assetRedirect(req);if(redirect)return redirect;const p=new URL(req.url).pathname;try{return new Response(await readFile(path.join(here,'public',p==='/'?'index.html':p.slice(1))))}catch{return new Response('Not found',{status:404})}}}};
+const request=(p,options={})=>{const url='https://'+kind+'.nadaun.co'+p,headers=new Headers(options.headers);if(options.method==='POST'&&!headers.has('Origin'))headers.set('Origin',new URL(url).origin);return new Request(url,{...options,headers});};
+const sourceProof=JSON.parse(await readFile(path.join(here,'asset-proof.json'),'utf8'));
+async function readFixtureAsset(pathname){try{return await readFile(path.join(here,'public',pathname.slice(1)))}catch(error){const record=sourceProof.publicFiles.find(row=>row.path===pathname);if(error.code!=='ENOENT'||!record)throw error;return readFile(path.resolve(here,'..',record.source));}}
+const env={RESEND_API_KEY:'unit-test-only',ASSETS:{async fetch(req){const redirect=assetRedirect(req);if(redirect)return redirect;const p=new URL(req.url).pathname;try{return new Response(await readFixtureAsset(p==='/'?'/index.html':p))}catch{return new Response('Not found',{status:404})}}}};
 const baseFetch=async(url,options={})=>{assert.match(url,/^https:\/\/media[.]nadaun[.]co\//);if(url.endsWith('/manifest.json'))return Response.json(fixture);assert.equal(options.method,'HEAD');return new Response(null,{headers:{'Content-Type':photo?'image/webp':'image/jpeg','Content-Length':'1000'}})};
 async function run(fn,fetcher=baseFetch){const old=globalThis.fetch;globalThis.fetch=fetcher;try{return await fn()}finally{globalThis.fetch=old}}
 test('home retains original public portfolio HTML and metadata',()=>run(async()=>{const r=await worker.fetch(request('/'),env);assert.equal(r.status,200);const html=await r.text();assert.match(html,/NADAUN|나다운/);assert.match(html,/og:image/)}));
