@@ -22,3 +22,7 @@ See `verification.json` for exact checks and remaining live-verification limits.
 Connect the existing GitHub main branch to the matching Cloudflare Worker. Build command: `node cloudflare/prepare-assets.mjs`. No npm install or frontend dependencies are required for these five static packages; the generator uses Node built-ins only (Node 24 tested). Wrangler root config declares the same build command, so a deployment regenerates the current public files and server-side preview data before bundling. The deployment environment supplies Wrangler.
 
 Track only worker/prepare/contact-adapter source, tests, this README, root wrangler.jsonc and the related existing application source. Generated public files, helper modules, dry-run bundles, proofs, runtime state and logs remain on NAS and are ignored. Existing secret values are never in GitHub/config.
+
+## Explicit HTML URL handling
+
+Keep `assets.html_handling` set to `none`. Cloudflare default HTML handling redirects existing `.html` URLs to extensionless paths, which the closed public allowlist correctly rejects. The Worker maps only approved `/` internally to `/index.html`; it does not open arbitrary extensionless or private paths. After deployment, verify `/`, `/index.html`, and actual navigation such as wedding `/snap.html` and `/film.html` return200 without a redirect to an unapproved route; also recheck private/source404 and HEAD body0. Official behavior: https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/#disable-html-handling

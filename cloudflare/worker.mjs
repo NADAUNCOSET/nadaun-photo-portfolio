@@ -5,6 +5,7 @@ import * as image from './share-image-route.mjs';
 const PHOTO=true;
 const security={'X-Content-Type-Options':'nosniff','X-Frame-Options':'SAMEORIGIN','Referrer-Policy':'no-referrer'};
 function finish(response,head=false){const headers=new Headers(response.headers);for(const [k,v]of Object.entries(security))headers.set(k,v);return new Response(head?null:response.body,{status:response.status,statusText:response.statusText,headers})}
+function assetRequest(request){const url=new URL(request.url);if(url.pathname==='/')url.pathname='/index.html';return new Request(url,request)}
 export default {async fetch(request,env){
  const url=new URL(request.url),head=request.method==='HEAD';let pathname;
  try{pathname=decodeURIComponent(url.pathname)}catch{return finish(new Response('Bad request',{status:400}),head)}
@@ -24,7 +25,7 @@ export default {async fetch(request,env){
   try{const r=await fetch(manifestRoutes[pathname],{method:request.method,headers:{Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('metadata');return finish(r,head)}
   catch{console.error(JSON.stringify({event:'public_manifest_unavailable',path:pathname}));return finish(Response.json({error:'Public gallery metadata temporarily unavailable'},{status:502,headers:{'Cache-Control':'no-store'}}),head)}
  }
- if(pathname!=='/'&&publicPaths.includes(pathname))return finish(await env.ASSETS.fetch(request),head);
+ if(pathname!=='/'&&publicPaths.includes(pathname))return finish(await env.ASSETS.fetch(assetRequest(request)),head);
  if(pathname==='/api/share')return finish(await share[head?'HEAD':'GET'](request),head);
  const gallery=pathname==='/'?'':pathname.slice(1).replace(/\/$/,'');
  if(PHOTO||pathname==='/'||/^(brand|beauty|vcr|portrait(?:\/(brand|beauty|vcr))?)\/?$/.test(gallery)){

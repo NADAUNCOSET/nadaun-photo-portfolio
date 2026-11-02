@@ -5,10 +5,15 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 const here=path.dirname(fileURLToPath(import.meta.url)),root=path.resolve(here,'..'),photo=path.basename(root).includes('photo'),kind=photo?'photo':'video';
+
+// Model Cloudflare html_handling at the asset boundary, not a bare filesystem.
+const htmlHandling=JSON.parse(await readFile(path.join(here,'../wrangler.jsonc'),'utf8')).assets.html_handling;
+function assetRedirect(request){const p=new URL(request.url).pathname;if(htmlHandling==='none'&&p==='/')return new Response('Not found',{status:404});if(htmlHandling!=='none'&&p.endsWith('.html'))return Response.redirect(new URL(p.slice(0,-5),request.url),308);return null}
+
 const mod=await import('./worker.mjs').catch(e=>{if(e.code==='ERR_MODULE_NOT_FOUND')return {default:{fetch:async()=>new Response('Not implemented',{status:501})}};throw e});
 const worker=mod.default,fixture=photo?null:JSON.parse(await readFile(path.join(root,'_content/video-manifest.json'),'utf8'));
 const request=(p,options={})=>new Request('https://'+kind+'.nadaun.co'+p,options);
-const env={RESEND_API_KEY:'unit-test-only',ASSETS:{async fetch(req){const p=new URL(req.url).pathname;try{return new Response(await readFile(path.join(here,'public',p==='/'?'index.html':p.slice(1))))}catch{return new Response('Not found',{status:404})}}}};
+const env={RESEND_API_KEY:'unit-test-only',ASSETS:{async fetch(req){const redirect=assetRedirect(req);if(redirect)return redirect;const p=new URL(req.url).pathname;try{return new Response(await readFile(path.join(here,'public',p==='/'?'index.html':p.slice(1))))}catch{return new Response('Not found',{status:404})}}}};
 const baseFetch=async(url,options={})=>{assert.match(url,/^https:\/\/media[.]nadaun[.]co\//);if(url.endsWith('/manifest.json'))return Response.json(fixture);assert.equal(options.method,'HEAD');return new Response(null,{headers:{'Content-Type':photo?'image/webp':'image/jpeg','Content-Length':'1000'}})};
 async function run(fn,fetcher=baseFetch){const old=globalThis.fetch;globalThis.fetch=fetcher;try{return await fn()}finally{globalThis.fetch=old}}
 test('home retains original public portfolio HTML and metadata',()=>run(async()=>{const r=await worker.fetch(request('/'),env);assert.equal(r.status,200);const html=await r.text();assert.match(html,/NADAUN|나다운/);assert.match(html,/og:image/)}));
@@ -20,3 +25,4 @@ test('invalid image identifiers cannot create redirects',()=>run(async()=>{const
 test('contact keeps required-field validation without external sending',async()=>{const r=await worker.fetch(request('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),env);assert.equal(r.status,400)});
 test('contact preserves provider payload and recipient',()=>run(async()=>{const body={name:'Test',phone:'000',date:'2026-11-03',[photo?'shootType':'projectType']:'Test'};const r=await worker.fetch(request('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),env);assert.equal(r.status,200);assert.equal((await r.json()).success,true)},async(url,options)=>{assert.equal(url,'https://api.resend.com/emails');const body=JSON.parse(options.body);assert.deepEqual(body.to,['rbsent.info@gmail.com']);assert.match(body.subject,new RegExp(kind.toUpperCase()));return Response.json({id:'test-message'})}));
 test('HEAD preserves shared page status without a body',()=>run(async()=>{const r=await worker.fetch(request('/',{method:'HEAD'}),env);assert.equal(r.status,200);assert.equal(await r.text(),'')}));
+test('original explicit HTML URLs are not redirected to unapproved extensionless routes',async()=>{const r=await worker.fetch(request('/index.html'),env);assert.equal(r.status,200);assert.equal(r.headers.get('Location'),null)});
