@@ -3,6 +3,9 @@ import {contact} from './contact-adapter.mjs';
 import * as share from './share-route.mjs';
 import * as image from './share-image-route.mjs';
 const PHOTO=true;
+function photoCacheVersion(env){return typeof env?.PHOTO_CACHE_VERSION==='string'&&/^[A-Za-z0-9_-]{1,64}$/.test(env.PHOTO_CACHE_VERSION)?env.PHOTO_CACHE_VERSION:null}
+function versionedPhoto(url,env){const target=new URL(url),version=photoCacheVersion(env);if(version&&target.hostname==='media.nadaun.co'&&target.pathname.startsWith('/photo/'))target.searchParams.set('_r2v',version);return target}
+function versionedRedirect(response,env){const location=response.headers.get('Location');if(!location||![301,302,303,307,308].includes(response.status))return response;const target=versionedPhoto(location,env);if(target.href===location)return response;const headers=new Headers(response.headers);headers.set('Location',target.href);return new Response(response.body,{status:response.status,statusText:response.statusText,headers})}
 const security={'X-Content-Type-Options':'nosniff','X-Frame-Options':'SAMEORIGIN','Referrer-Policy':'no-referrer'};
 function finish(response,head=false){const headers=new Headers(response.headers);for(const [k,v]of Object.entries(security))headers.set(k,v);return new Response(head?null:response.body,{status:response.status,statusText:response.statusText,headers})}
 function assetRequest(request){const url=new URL(request.url);if(url.pathname==='/')url.pathname='/index.html';return new Request(url,request)}
@@ -14,12 +17,12 @@ export default {async fetch(request,env){
  if(!['GET','HEAD'].includes(request.method))return finish(new Response('Method not allowed',{status:405,headers:{Allow:'GET, HEAD'}}));
  if(PHOTO&&pathname.startsWith('/images/')){
   const target=new URL('https://media.nadaun.co/photo/'+pathname.slice('/images/'.length));target.search=url.search;
-  return finish(new Response(null,{status:307,headers:{Location:target.href}}),head);
+  return finish(new Response(null,{status:307,headers:{Location:versionedPhoto(target,env).href}}),head);
  }
  const imageMatch=pathname.match(PHOTO?/^\/share-image\/([0-9]+)[.]webp$/:/^\/share-image\/([a-f0-9]{20})[.]jpg$/);
  if(imageMatch||pathname==='/api/share-image'){
   if(imageMatch)url.searchParams.set(PHOTO?'project':'image',imageMatch[1]);
-  return finish(await image[head?'HEAD':'GET'](new Request(url,{method:request.method})),head);
+  return finish(versionedRedirect(await image[head?'HEAD':'GET'](new Request(url,{method:request.method})),env),head);
  }
  if(Object.hasOwn(manifestRoutes,pathname)){
   try{const r=await fetch(manifestRoutes[pathname],{method:request.method,headers:{Accept:'application/json'},redirect:'manual',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('metadata');return finish(r,head)}
