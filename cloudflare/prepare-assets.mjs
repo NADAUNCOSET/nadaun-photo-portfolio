@@ -15,11 +15,24 @@ for(const item of await readdir(source,{withFileTypes:true})){
 }
 if(!records.some(x=>x.path==='/index.html'))throw Error('Missing public index');
 const manifestRoutes=site==='nadaun-agency-portfolio'?{'/agency-manifest.json':'https://media.nadaun.co/agency/manifest.json'}:site==='nadaun-video-portfolio'?{'/video-manifest.json':'https://media.nadaun.co/video/manifest.json'}:{};
+const securityHeaders={'X-Content-Type-Options':'nosniff','X-Frame-Options':'SAMEORIGIN','Referrer-Policy':'no-referrer'};
+const headersBody='/*\n'+Object.entries(securityHeaders).map(([key,value])=>'  '+key+': '+value).join('\n')+'\n';
+await writeFile(path.join(publicDir,'_headers'),headersBody);
+const assetControlFiles=[{path:'/_headers',bytes:Buffer.byteLength(headersBody),sha256:createHash('sha256').update(headersBody).digest('hex'),servedAsAsset:false}];
+const workerFirstPaths=JSON.parse(await readFile(path.join(root,'wrangler.jsonc'),'utf8')).assets.run_worker_first;
+if(!Array.isArray(workerFirstPaths))throw Error('Selective Worker-first paths required');
+const staticPaths=records.map(record=>record.path).filter(pathname=>pathname!=='/index.html'&&!Object.hasOwn(manifestRoutes,pathname));
+for(const pathname of staticPaths)if(!workerFirstPaths.includes('!'+pathname))throw Error('Missing explicit static bypass '+pathname);
+for(const pattern of workerFirstPaths.filter(value=>value.startsWith('!')))if(!staticPaths.includes(pattern.slice(1)))throw Error('Unapproved static bypass '+pattern);
+const requiredWorkerPaths=['/','/index.html','/api/*',...Object.keys(manifestRoutes)];
+for(const pathname of requiredWorkerPaths)if(!workerFirstPaths.includes('/*')&&!workerFirstPaths.includes(pathname))throw Error('Missing dynamic Worker route '+pathname);
+const packageNames=new Set([...records.map(record=>record.path.slice(1)),'_headers']);
+for(const name of await readdir(publicDir))if(!packageNames.has(name))throw Error('Unexpected file in public package: '+name);
 await writeFile(path.join(here,'public-routes.mjs'),'export const publicPaths = '+JSON.stringify(records.map(x=>x.path))+';\nexport const manifestRoutes = '+JSON.stringify(manifestRoutes)+';\n');
 const legacy=(await readFile(path.join(root,'api/contact.js'),'utf8')).replace('handler(req, res)','handler(req, res, env)').replaceAll('process.env.RESEND_API_KEY','env.RESEND_API_KEY');
 if(legacy.includes('process.env'))throw Error('Unconverted environment dependency');
 await writeFile(path.join(here,'contact-handler.mjs'),legacy);
-await writeFile(path.join(here,'asset-proof.json'),JSON.stringify({site,preparedAt:new Date().toISOString(),publicFiles:records,manifestRoutes,requiredSecretNames:['RESEND_API_KEY'],excluded:'Only explicit public top-level HTML/CSS/JS/icons/metadata are staged; no private dirs, source helpers, env or originals. Original contact code is bundled server-side only with env binding adaptation.'},null,2)+'\n');
+await writeFile(path.join(here,'asset-proof.json'),JSON.stringify({site,preparedAt:new Date().toISOString(),publicFiles:records,manifestRoutes,securityHeaders,assetControlFiles,workerFirstPaths,requiredWorkerPaths,requiredSecretNames:['RESEND_API_KEY'],excluded:'Only explicit public top-level HTML/CSS/JS/icons/metadata are staged; no private dirs, source helpers, env or originals. Original contact code is bundled server-side only with env binding adaptation.'},null,2)+'\n');
 console.log(JSON.stringify({site,files:records.length,bytes:records.reduce((n,x)=>n+x.bytes,0),manifestRoutes,requiredSecretNames:['RESEND_API_KEY']}));
 
 import vm from 'node:vm';
@@ -46,5 +59,5 @@ if(site==='nadaun-photo-portfolio'){
 await writeFile(path.join(here,'preview-runtime.mjs'),runtime);
 for(const [input,output]of [['share.js','share-route.mjs'],['share-image.js','share-image-route.mjs']]){
  const original=await readFile(path.join(root,'api',input),'utf8');
- await writeFile(path.join(here,output),original.replace("import preview from '../_lib/share-preview.cjs';","import * as preview from './preview-runtime.mjs';"));
+ await writeFile(path.join(here,output),original.replace("import preview from '../_lib/share-preview.cjs';","import * as preview from './preview-runtime.mjs';").replaceAll("redirect:'error'","redirect:'manual'"));
 }

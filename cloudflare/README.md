@@ -1,5 +1,17 @@
 # Cloudflare recovery package — nadaun-photo-portfolio
 
+## Current state — 2026-11-02 afternoon
+
+Canonical URL: [https://photo.nadaun.co](https://photo.nadaun.co). Source: [NADAUNCOSET/nadaun-photo-portfolio](https://github.com/NADAUNCOSET/nadaun-photo-portfolio) from the existing NAS `_Site/nadaun-photo-portfolio` master. The Worker and canonical domain were deployed; home200 is verified. GitHub automatic deployment linking and each business feature are separate checks.
+
+The current optimization keeps Worker handling as the default (`/*`) and bypasses it only for 22 exact approved static paths using negative patterns. Home `/`, `/index.html`, API, sharing/category queries, metadata, unknown and encoded paths retain Worker handling. The exact list is in [wrangler.jsonc](../wrangler.jsonc). The asset package adds a non-public `_headers` control file with the same nosniff, SAMEORIGIN and no-referrer headers; original payload bytes, media URLs and quality remain unchanged.
+
+Prepare with `node cloudflare/prepare-assets.mjs`; run `node --test cloudflare/worker.test.mjs cloudflare/asset-delivery.test.mjs` (14 checks). `node cloudflare/asset-delivery-smoke.mjs <verified-wrangler-api-entry>` uses the installed Wrangler4.156.1 local runtime and production compatibility date2026-11-02 to test actual asset bypass, headers, private404, method guards and dynamic routes. Its test probe stays in ignored NAS logs and is never the production main. This optimization is awaiting the operator's remote deployment and live verification.
+
+Contact delivery remains incomplete until the authorized sending credential is correctly bound and actual delivery is verified. GET405 and mocked validation tests do not establish a delivered email. Static delivery avoids Worker invocation only for the listed canonical assets; home/dynamic requests still use Worker quota. The actual account plan is unverified, and domain fees do not include unlimited Worker/R2 usage.
+
+## Preparation snapshot — before deployment, preserved history
+
 Prepared 2026-11-02 05:56:50 UTC. **Local package only; deployment and DNS are handled by the root operator.**
 
 1. From the repository root, run `node cloudflare/prepare-assets.mjs` to regenerate the explicit public allowlist and asset hashes from the current NAS source.

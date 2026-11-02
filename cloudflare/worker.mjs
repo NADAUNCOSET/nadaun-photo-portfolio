@@ -22,7 +22,7 @@ export default {async fetch(request,env){
   return finish(await image[head?'HEAD':'GET'](new Request(url,{method:request.method})),head);
  }
  if(Object.hasOwn(manifestRoutes,pathname)){
-  try{const r=await fetch(manifestRoutes[pathname],{method:request.method,headers:{Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('metadata');return finish(r,head)}
+  try{const r=await fetch(manifestRoutes[pathname],{method:request.method,headers:{Accept:'application/json'},redirect:'manual',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('metadata');return finish(r,head)}
   catch{console.error(JSON.stringify({event:'public_manifest_unavailable',path:pathname}));return finish(Response.json({error:'Public gallery metadata temporarily unavailable'},{status:502,headers:{'Cache-Control':'no-store'}}),head)}
  }
  if(pathname!=='/'&&publicPaths.includes(pathname))return finish(await env.ASSETS.fetch(assetRequest(request)),head);
