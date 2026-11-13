@@ -69,3 +69,6 @@ api/*
 /cloudflare/video-rules.mjs
 /.dev.vars*
 /cloudflare/.dev.vars*
+
+# Private AdSense deployment evidence and runtime rollback snapshot
+/_private/operations/adsense-sites-20261114/

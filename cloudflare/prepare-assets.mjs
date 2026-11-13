@@ -9,7 +9,7 @@ const extensions=new Set(['.html','.css','.js','.webmanifest','.ico','.png','.sv
 const records=[];
 for(const item of await readdir(source,{withFileTypes:true})){
  const name=item.name;
- if(!item.isFile()||name.startsWith('.')||!(extensions.has(path.extname(name))||['robots.txt','sitemap.xml','indexnow-verification.txt','agency-manifest.json'].includes(name)))continue;
+ if(!item.isFile()||name.startsWith('.')||!(extensions.has(path.extname(name))||['ads.txt','robots.txt','sitemap.xml','indexnow-verification.txt','agency-manifest.json'].includes(name)))continue;
  const bytes=await readFile(path.join(source,name));await copyFile(path.join(source,name),path.join(publicDir,name));
  records.push({path:'/'+name,source:path.relative(root,path.join(source,name)).replaceAll('\\','/'),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
 }

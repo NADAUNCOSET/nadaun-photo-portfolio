@@ -1,3 +1,4 @@
+import {publicAdPolicy} from './adsense.mjs';
 import {publicPaths,manifestRoutes} from './public-routes.mjs';
 import {contact} from './contact-adapter.mjs';
 import * as share from './share-route.mjs';
@@ -35,13 +36,14 @@ export default {async fetch(request,env){
   try{const r=await fetch(manifestRoutes[pathname],{method:request.method,headers:{Accept:'application/json'},redirect:'manual',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('metadata');return finish(r,head)}
   catch{console.error(JSON.stringify({event:'public_manifest_unavailable',path:pathname}));return finish(Response.json({error:'Public gallery metadata temporarily unavailable'},{status:502,headers:{'Cache-Control':'no-store'}}),head)}
  }
- if(pathname!=='/'&&publicPaths.includes(pathname))return finish(await env.ASSETS.fetch(assetRequest(request)),head);
- if(pathname==='/api/share')return finish(await share[head?'HEAD':'GET'](request),head);
+ if(pathname==='/ads.txt')return finish(await env.ASSETS.fetch(new Request(new URL('/ads.txt',request.url),request)),head);
+ if(pathname!=='/'&&publicPaths.includes(pathname))return finish(await publicAdPolicy(await env.ASSETS.fetch(assetRequest(request)),pathname,head),head);
+ if(pathname==='/api/share')return finish(await publicAdPolicy(await share[head?'HEAD':'GET'](request),pathname,head),head);
  const gallery=pathname==='/'?'':pathname.slice(1).replace(/\/$/,'');
  if(PHOTO||pathname==='/'||/^(brand|beauty|vcr|portrait(?:\/(brand|beauty|vcr))?)\/?$/.test(gallery)){
   url.searchParams.set(PHOTO?'category':'gallery',gallery);
   if(pathname!=='/'&&pathname.endsWith('/'))url.searchParams.set('_canonical','1');
-  return finish(await share[head?'HEAD':'GET'](new Request(url,{method:request.method})),head);
+  return finish(await publicAdPolicy(await share[head?'HEAD':'GET'](new Request(url,{method:request.method})),pathname,head),head);
  }
  return finish(new Response('Not found',{status:404}),head);
 }};
