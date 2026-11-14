@@ -47,8 +47,8 @@ function renderPreview(slug = '', id, revision) {
   const url = new URL('/' + slug, SITE);
   if (project) url.searchParams.set('project', String(project.id));
   if (revision === '2') url.searchParams.set('s', revision);
-  const title = project ? `${project.name} · ${project.category} | 나다운` : category ? `${category} | 나다운 포토그래피` : '나다운 포토그래피';
-  const description = project ? `${project.name} — 나다운 ${project.category} 촬영 포트폴리오.` : category ? `나다운의 ${category} 촬영 포트폴리오를 만나보세요.` : '나다운 사진 포트폴리오를 만나보세요.';
+  const title = project ? `${project.name} · ${project.category} | NADAUN PROJECT` : category ? `${category} | 나다운 프로젝트 사진 포트폴리오` : template.match(/<title>(.*?)<\/title>/)[1];
+  const description = project ? `${project.name} — 나다운 프로젝트(NADAUN PROJECT)의 ${project.category} 촬영 포트폴리오.` : category ? `나다운 프로젝트(NADAUN PROJECT)의 ${category} 촬영 포트폴리오를 만나보세요.` : template.match(/<meta name="description" content="([^"]+)"/)[1];
   const image = imageUrl(representative);
   const alt = `${representative.name} · ${representative.category} — NADAUN Photography`;
   let html = template.replace(/<title>[\s\S]*?<\/title>/, () => '<title>' + escapeHtml(title) + '</title>');

@@ -16,8 +16,18 @@ const env={ASSETS:{async fetch(request){const p=new URL(request.url).pathname;tr
 const req=(p,options={})=>new Request('https://'+host+p,options);
 function tags(html){assert.equal((html.match(/pagead\/js\/adsbygoogle[.]js/g)||[]).length,1);assert.equal((html.match(/name="google-adsense-account"/g)||[]).length,1);assert.ok(html.includes('client='+publisher));assert.match(html,/<script async src="https:\/\/pagead2[.]googlesyndication[.]com\/pagead\/js\/adsbygoogle[.]js\?client=ca-pub-9416492869063856" crossorigin="anonymous"><\/script>/);assert.ok(!/data-ad-slot|<ins[^>]*adsbygoogle/.test(html));}
 async function mocked(fn){const old=globalThis.fetch;globalThis.fetch=async()=>Response.json(fixture);try{return await fn()}finally{globalThis.fetch=old}}
-test('source and generated public HTML have one official loader and no manual slots; all other bytes preserved',async()=>{
- for(const name of ['index.html','services-guide.html']){const html=await readFile(path.join(source,name),'utf8');tags(html);const before=await readFile(path.join(root,'backups/20261114_adsense_sites',photo?name:'src/'+name),'utf8');assert.equal(html.replace(block,''),before);assert.equal(await readFile(path.join(root,'cloudflare/public',name),'utf8'),html)}
+// The pre-AdSense backup is an immutable deployment receipt, not a freeze on
+// future page copy. Assert current source/staging equality and policy byte scope.
+test('current source and generated HTML have one official loader; ad policy preserves every other byte',async()=>{
+ for(const name of ['index.html','services-guide.html']){
+  const html=await readFile(path.join(source,name),'utf8');tags(html);
+  assert.equal(await readFile(path.join(root,'cloudflare/public',name),'utf8'),html);
+  const response=()=>new Response(html,{headers:{'Content-Type':'text/html; charset=utf-8'}});
+  const allowed=await publicAdPolicy(response(),name==='index.html'?'/':'/services-guide.html');
+  assert.equal(await allowed.text(),html,'allowed public page must remain byte-identical');
+  const stripped=await publicAdPolicy(response(),'/api/share');
+  assert.equal(await stripped.text(),html.replace(block,''),'API policy may remove only the marked ad block');
+ }
 });
 test('all allowed public SSR galleries and project links retain exactly one ad loader',()=>mocked(async()=>{
  const paths=[...adHtmlPaths].filter(p=>p!=='/services-guide.html');paths.push(photo?'/?project=1409&s=2':'/?lib='+encodeURIComponent('가로')+'&video='+encodeURIComponent(fixture['가로'][0].file));
